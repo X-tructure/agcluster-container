@@ -11,7 +11,7 @@ interface Session {
   config_id: string;
   status: string;
   created_at: string;
-  last_activity: string;
+  last_active: string;
   container_stats?: {
     cpu_usage: number;
     memory_usage: string;
@@ -193,7 +193,7 @@ export default function SessionsPage() {
                   <div className="flex items-center gap-2">
                     <Activity className="w-4 h-4 text-gray-500" />
                     <span className="text-gray-400">Last activity:</span>
-                    <span>{formatDuration(session.last_activity)} ago</span>
+                    <span>{formatDuration(session.last_active)} ago</span>
                   </div>
                 </div>
 
