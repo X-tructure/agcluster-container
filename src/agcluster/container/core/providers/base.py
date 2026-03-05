@@ -58,6 +58,7 @@ class ProviderConfig:
     system_prompt: str
     max_turns: int
     api_key: str
+    base_url: Optional[str] = None
     platform_credentials: Dict[str, Any] = field(default_factory=dict)
     mcp_servers: Optional[Dict[str, Any]] = None
     mcp_env: Optional[Dict[str, Dict[str, str]]] = None

@@ -19,6 +19,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [configs, setConfigs] = useState<ConfigInfo[]>([]);
   const [apiKey, setApiKey] = useState('');
+  const [apiBaseUrl, setApiBaseUrl] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [backendConnected, setBackendConnected] = useState(false);
@@ -29,6 +30,8 @@ export default function DashboardPage() {
   useEffect(() => {
     const savedKey = localStorage.getItem('anthropic_api_key');
     if (savedKey) setApiKey(savedKey);
+    const savedBaseUrl = localStorage.getItem('anthropic_base_url');
+    if (savedBaseUrl) setApiBaseUrl(savedBaseUrl);
   }, []);
 
   // Fetch available configs from backend
@@ -79,10 +82,16 @@ export default function DashboardPage() {
     try {
       // Save API key
       localStorage.setItem('anthropic_api_key', apiKey);
+      if (apiBaseUrl) {
+        localStorage.setItem('anthropic_base_url', apiBaseUrl);
+      } else {
+        localStorage.removeItem('anthropic_base_url');
+      }
 
       // Launch agent with config
       const response = await launchAgent({
         api_key: apiKey,
+        base_url: apiBaseUrl || undefined,
         config_id: configId,
         mcp_env: Object.keys(mcpEnv).length > 0 ? mcpEnv : undefined,
       });
@@ -118,7 +127,7 @@ export default function DashboardPage() {
           </p>
 
           {/* API Key Input */}
-          <div className="max-w-md mx-auto">
+          <div className="max-w-md mx-auto space-y-3">
             <input
               type="password"
               placeholder="Enter your Anthropic API Key"
@@ -126,7 +135,14 @@ export default function DashboardPage() {
               onChange={(e) => setApiKey(e.target.value)}
               className="w-full px-4 py-3 rounded-lg glass focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
             />
-            <p className="text-xs text-gray-500 mt-2">Your API key is stored locally and never sent to our servers</p>
+            <input
+              type="text"
+              placeholder="API Base URL (optional, e.g. https://your-proxy.com)"
+              value={apiBaseUrl}
+              onChange={(e) => setApiBaseUrl(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg glass focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+            />
+            <p className="text-xs text-gray-500">Your API key is stored locally and never sent to our servers</p>
           </div>
         </div>
 

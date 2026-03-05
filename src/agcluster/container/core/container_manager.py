@@ -178,6 +178,7 @@ class ContainerManager:
     async def create_agent_container_from_config(
         self,
         api_key: str,
+        base_url: Optional[str],
         config: AgentConfig,
         config_id: str,
         mcp_env: Optional[Dict[str, Dict[str, str]]] = None,
@@ -187,6 +188,7 @@ class ContainerManager:
 
         Args:
             api_key: Anthropic API key
+            base_url: Anthropic API Base URL
             config: Agent configuration
             config_id: Configuration ID (for tracking)
             mcp_env: Optional runtime environment variables for MCP servers
@@ -223,6 +225,7 @@ class ContainerManager:
             system_prompt=config.system_prompt,
             max_turns=config.max_turns,
             api_key=api_key,
+            base_url=base_url,
             platform_credentials={},  # TODO: Add platform-specific creds when needed
             mcp_servers=config.mcp_servers,  # Pass MCP servers from config
             mcp_env=sanitized_mcp_env,  # Pass runtime MCP environment variables

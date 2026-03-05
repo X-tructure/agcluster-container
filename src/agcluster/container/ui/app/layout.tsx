@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import AgentationWidget from './agentation-widget';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,7 +17,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className} suppressHydrationWarning>
+        {children}
+        {process.env.NODE_ENV === 'development' && (
+          <AgentationWidget />
+        )}
+      </body>
     </html>
   );
 }

@@ -31,7 +31,8 @@ export async function POST(req: Request) {
     }
 
     // Call Claude-native backend endpoint
-    const backendUrl = process.env.AGCLUSTER_API_URL || 'http://api:8000';
+    // AGCLUSTER_API_URL is set in Docker (http://api:8000), fallback to localhost for local dev
+    const backendUrl = process.env.AGCLUSTER_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
     const chatUrl = `${backendUrl}/api/agents/chat`;
 
     // Prepare request body for backend
@@ -76,8 +77,12 @@ export async function POST(req: Request) {
     });
 
     if (!response.ok) {
-      console.error('Backend error:', response.statusText);
-      return new Response(response.statusText, { status: response.status });
+      const errorBody = await response.text().catch(() => response.statusText);
+      console.error(`Backend error ${response.status}:`, errorBody);
+      return new Response(errorBody || response.statusText, {
+        status: response.status,
+        headers: { 'Content-Type': 'text/plain' },
+      });
     }
 
     // Transform backend SSE to Vercel AI SDK format

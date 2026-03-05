@@ -78,6 +78,7 @@ async def launch_agent(request: LaunchRequest):
         session_id, agent_container = await session_manager.create_session_from_config(
             conversation_id=conversation_id,
             api_key=request.api_key,
+            base_url=request.base_url,
             config_id=request.config_id,
             config=request.config,
             provider=request.provider,

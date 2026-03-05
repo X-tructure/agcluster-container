@@ -36,6 +36,7 @@ export interface ConfigInfo {
 
 export interface LaunchAgentRequest {
   api_key: string;
+  base_url?: string;
   config_id?: string;
   config?: AgentConfig;
   mcp_env?: Record<string, Record<string, string>>;

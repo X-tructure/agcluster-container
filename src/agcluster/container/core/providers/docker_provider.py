@@ -105,6 +105,10 @@ class DockerProvider(ContainerProvider):
                 "AGENT_CONFIG_JSON": json.dumps(agent_config_dict),
             }
 
+            # Set custom Anthropic base URL if provided
+            if getattr(config, "base_url", None):
+                env["ANTHROPIC_BASE_URL"] = config.base_url
+
             # Merge MCP environment variables if provided
             if config.mcp_env:
                 for server_name, server_env in config.mcp_env.items():
@@ -141,8 +145,9 @@ class DockerProvider(ContainerProvider):
                 detach=True,
                 # Environment
                 environment=env,
-                # Network
+                # Network - use custom network for inter-container communication
                 network=self.network_name,
+                # No host port mapping: communicate via container IP on internal network
                 # Resource limits from config
                 mem_limit=config.memory_limit,
                 cpu_quota=config.cpu_quota,

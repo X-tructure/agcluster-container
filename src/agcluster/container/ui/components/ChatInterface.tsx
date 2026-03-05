@@ -82,7 +82,8 @@ export function ChatInterface({ sessionId, apiKey, onBack }: ChatInterfaceProps)
 
     setIsStopping(true);
     try {
-      const response = await fetch(`http://localhost:8000/api/agents/sessions/${sessionId}`, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${apiUrl}/api/agents/sessions/${sessionId}`, {
         method: 'DELETE',
       });
 
@@ -161,7 +162,8 @@ export function ChatInterface({ sessionId, apiKey, onBack }: ChatInterfaceProps)
       });
 
       if (!response.ok) {
-        throw new Error(`Chat API error: ${response.statusText}`);
+        const errorBody = await response.text().catch(() => response.statusText);
+        throw new Error(`Chat API error: ${errorBody || response.statusText}`);
       }
 
       // Read the streaming response

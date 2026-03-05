@@ -7,7 +7,6 @@ from datetime import datetime
 # Import AgentConfig from agent_config module
 from agcluster.container.models.agent_config import AgentConfig as FullAgentConfig
 
-
 # OpenAI-compatible schemas
 
 
@@ -110,6 +109,9 @@ class LaunchRequest(BaseModel):
     """Request to launch agent from configuration"""
 
     api_key: str = Field(..., description="Anthropic API key (BYOK)")
+    base_url: Optional[str] = Field(
+        None, description="Custom Anthropic API base URL (e.g., for proxies)"
+    )
     config_id: Optional[str] = Field(None, description="ID of saved configuration to use")
     config: Optional[FullAgentConfig] = Field(None, description="Inline configuration")
     provider: Optional[str] = Field(

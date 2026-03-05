@@ -58,6 +58,7 @@ class SessionManager:
         self,
         conversation_id: str,
         api_key: str,
+        base_url: Optional[str] = None,
         config_id: Optional[str] = None,
         config: Optional[AgentConfig] = None,
         provider: Optional[str] = None,
@@ -69,6 +70,7 @@ class SessionManager:
         Args:
             conversation_id: Conversation ID
             api_key: Anthropic API key
+            base_url: Optional API BaseURL
             config_id: Optional config ID to load
             config: Optional inline config
             provider: Optional provider name (docker, fly_machines, cloudflare, vercel)
@@ -111,13 +113,21 @@ class SessionManager:
             logger.info(f"Creating session {session_id} with provider {provider}")
             provider_manager = ContainerManager(provider_name=provider)
             agent_container = await provider_manager.create_agent_container_from_config(
-                api_key=api_key, config=config, config_id=effective_config_id, mcp_env=mcp_env
+                api_key=api_key,
+                base_url=base_url,
+                config=config,
+                config_id=effective_config_id,
+                mcp_env=mcp_env,
             )
         else:
             # Use global container manager (default provider)
             logger.info(f"Creating session {session_id} with config {effective_config_id}")
             agent_container = await container_manager.create_agent_container_from_config(
-                api_key=api_key, config=config, config_id=effective_config_id, mcp_env=mcp_env
+                api_key=api_key,
+                base_url=base_url,
+                config=config,
+                config_id=effective_config_id,
+                mcp_env=mcp_env,
             )
 
         # Store session
