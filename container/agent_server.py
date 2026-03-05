@@ -1,6 +1,5 @@
 """FastAPI server with SSE running inside Docker container - wraps Claude Agent SDK"""
 
-import asyncio
 import json
 import logging
 import os
@@ -132,8 +131,11 @@ class AgentServer:
             hooks = self.config.get("hooks", {})
             if hooks:
                 try:
-                    # Import HookMatcher if available
-                    from claude_agent_sdk import HookMatcher
+                    # Import HookMatcher if available (availability check only)
+                    import importlib.util
+
+                    if importlib.util.find_spec("claude_agent_sdk"):
+                        pass  # HookMatcher available but not yet wired up
 
                     # Convert hooks configuration to SDK format
                     hook_config = {}
@@ -273,9 +275,10 @@ class AgentServer:
                 for block in message.content:
                     if ThinkingBlock and isinstance(block, ThinkingBlock):
                         # Return thinking block as event
+                        # ThinkingBlock uses .thinking attribute (not .text like TextBlock)
                         return {
                             "type": "thinking",
-                            "content": block.text,
+                            "content": getattr(block, "thinking", getattr(block, "text", "")),
                             "timestamp": datetime.now(timezone.utc).isoformat(),
                         }
                     elif isinstance(block, TextBlock):
