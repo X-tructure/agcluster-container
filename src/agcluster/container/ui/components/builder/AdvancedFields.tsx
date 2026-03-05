@@ -12,6 +12,8 @@ interface AdvancedFieldsProps {
   onChange: (field: string, value: any) => void;
 }
 
+const inputCls = 'w-full px-3 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-primary)] rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm';
+
 export function AdvancedFields({
   version,
   model,
@@ -51,18 +53,18 @@ export function AdvancedFields({
   };
 
   return (
-    <div className="border border-gray-800 rounded-lg bg-gray-900/30">
+    <div className="border border-[var(--border-glass)] rounded-lg bg-[var(--card-bg)]">
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between p-4 hover:bg-gray-800/50 transition-colors"
+        className="w-full flex items-center justify-between p-4 hover:bg-[var(--card-header-bg)] transition-colors rounded-lg"
       >
         <div className="flex items-center gap-3">
           {isExpanded ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
           <Settings className="w-5 h-5" />
           <span className="font-semibold">Advanced Configuration</span>
         </div>
-        <span className="text-xs text-gray-500">Optional fields</span>
+        <span className="text-xs text-[var(--text-secondary)]">Optional fields</span>
       </button>
 
       {isExpanded && (
@@ -75,9 +77,9 @@ export function AdvancedFields({
               value={version || ''}
               onChange={(e) => onChange('version', e.target.value || undefined)}
               placeholder="1.0.0"
-              className="w-full px-3 py-2 bg-gray-900 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              className={inputCls}
             />
-            <p className="text-xs text-gray-500 mt-1">Semantic version for this configuration</p>
+            <p className="text-xs text-[var(--text-secondary)] mt-1">Semantic version for this configuration</p>
           </div>
 
           {/* Model */}
@@ -88,9 +90,9 @@ export function AdvancedFields({
               value={model || ''}
               onChange={(e) => onChange('model', e.target.value || undefined)}
               placeholder="claude-sonnet-4.5"
-              className="w-full px-3 py-2 bg-gray-900 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-mono"
+              className={inputCls + ' font-mono'}
             />
-            <p className="text-xs text-gray-500 mt-1">Specific Claude model to use</p>
+            <p className="text-xs text-[var(--text-secondary)] mt-1">Specific Claude model to use</p>
           </div>
 
           {/* Working Directory */}
@@ -101,9 +103,9 @@ export function AdvancedFields({
               value={cwd || ''}
               onChange={(e) => onChange('cwd', e.target.value || undefined)}
               placeholder="/workspace"
-              className="w-full px-3 py-2 bg-gray-900 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-mono"
+              className={inputCls + ' font-mono'}
             />
-            <p className="text-xs text-gray-500 mt-1">Base working directory for agent operations</p>
+            <p className="text-xs text-[var(--text-secondary)] mt-1">Base working directory for agent operations</p>
           </div>
 
           {/* Environment Variables */}
@@ -113,7 +115,7 @@ export function AdvancedFields({
               <button
                 type="button"
                 onClick={handleAddEnvVar}
-                className="flex items-center gap-1 px-2 py-1 text-xs bg-gray-800 hover:bg-gray-700 rounded"
+                className="flex items-center gap-1 px-2 py-1 text-xs bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-primary)] rounded"
               >
                 <Plus className="w-3 h-3" />
                 Add
@@ -121,7 +123,7 @@ export function AdvancedFields({
             </div>
 
             {envEntries.length === 0 ? (
-              <div className="p-3 border border-dashed border-gray-700 rounded text-xs text-gray-500 text-center">
+              <div className="p-3 border border-dashed border-[var(--border-glass-hover)] rounded text-xs text-[var(--text-secondary)] text-center">
                 No environment variables defined
               </div>
             ) : (
@@ -133,19 +135,19 @@ export function AdvancedFields({
                       value={key}
                       onChange={(e) => handleUpdateEnvKey(key, e.target.value)}
                       placeholder="VARIABLE_NAME"
-                      className="flex-1 px-3 py-2 bg-gray-900 border border-gray-800 rounded focus:ring-2 focus:ring-blue-500 text-sm font-mono"
+                      className={inputCls + ' flex-1 font-mono'}
                     />
                     <input
                       type="text"
                       value={value}
                       onChange={(e) => handleUpdateEnvValue(key, e.target.value)}
                       placeholder="value"
-                      className="flex-1 px-3 py-2 bg-gray-900 border border-gray-800 rounded focus:ring-2 focus:ring-blue-500 text-sm font-mono"
+                      className={inputCls + ' flex-1 font-mono'}
                     />
                     <button
                       type="button"
                       onClick={() => handleRemoveEnvVar(key)}
-                      className="p-2 hover:bg-red-900/50 rounded text-red-400"
+                      className="p-2 hover:bg-red-500/20 rounded text-red-400"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -171,13 +173,13 @@ export function AdvancedFields({
                         : current.filter((s) => s !== source);
                       onChange('setting_sources', updated.length > 0 ? updated : undefined);
                     }}
-                    className="w-4 h-4 rounded border-gray-700 bg-gray-900 focus:ring-2 focus:ring-blue-500"
+                    className="w-4 h-4 rounded border-[var(--input-border)] bg-[var(--input-bg)] focus:ring-2 focus:ring-blue-500"
                   />
                   <span className="capitalize">{source}</span>
                 </label>
               ))}
             </div>
-            <p className="text-xs text-gray-500 mt-1">Filesystem settings to load</p>
+            <p className="text-xs text-[var(--text-secondary)] mt-1">Filesystem settings to load</p>
           </div>
         </div>
       )}

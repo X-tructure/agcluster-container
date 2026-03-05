@@ -76,27 +76,30 @@ export default function SessionsPage() {
     }
   };
 
-  const formatDuration = (timestamp: string) => {
+  const formatDuration = (timestamp: string | null | undefined) => {
+    if (!timestamp) return '—';
     const start = new Date(timestamp).getTime();
+    if (isNaN(start)) return '—';
     const now = Date.now();
     const diff = Math.floor((now - start) / 1000); // seconds
 
-    if (diff < 60) return `${diff}s`;
-    if (diff < 3600) return `${Math.floor(diff / 60)}m`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)}h`;
-    return `${Math.floor(diff / 86400)}d`;
+    if (diff < 0) return 'just now';
+    if (diff < 60) return `${diff}s ago`;
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+    return `${Math.floor(diff / 86400)}d ago`;
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)]">
       {/* Header */}
       <Navigation />
 
       {/* Page Title */}
-      <div className="border-b border-gray-800/50 bg-gradient-to-b from-black via-gray-950/5 to-black">
+      <div className="border-b border-[var(--border-glass)] bg-[var(--bg-glass)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
           <h1 className="text-2xl md:text-3xl font-bold gradient-text mb-1">Active Sessions</h1>
-          <p className="text-gray-400 text-sm">Monitor and manage your agent sessions</p>
+          <p className="text-[var(--text-secondary)] text-sm">Monitor and manage your agent sessions</p>
         </div>
       </div>
 
@@ -104,8 +107,8 @@ export default function SessionsPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {loading && sessions.length === 0 && (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-gray-500 mb-4"></div>
-            <p className="text-gray-400">Loading sessions...</p>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--text-secondary)] mb-4"></div>
+            <p className="text-[var(--text-secondary)]">Loading sessions...</p>
           </div>
         )}
 
@@ -117,12 +120,12 @@ export default function SessionsPage() {
 
         {!loading && sessions.length === 0 && !error && (
           <div className="text-center py-12 glass rounded-xl">
-            <Activity className="w-16 h-16 mx-auto mb-4 text-gray-600" />
+            <Activity className="w-16 h-16 mx-auto mb-4 text-[var(--text-secondary)]" />
             <h3 className="text-xl font-semibold mb-2">No Active Sessions</h3>
-            <p className="text-gray-400 mb-6">Launch an agent from the dashboard to get started</p>
+            <p className="text-[var(--text-secondary)] mb-6">Launch an agent from the dashboard to get started</p>
             <button
               onClick={() => router.push('/')}
-              className="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded transition-colors"
+              className="px-6 py-3 bg-[var(--bg-glass-hover)] hover:bg-[var(--border-glass)] rounded transition-colors"
             >
               Go to Dashboard
             </button>
@@ -134,27 +137,27 @@ export default function SessionsPage() {
             {sessions.map((session) => (
               <div
                 key={session.session_id}
-                className="glow-card glass rounded-xl p-6 hover:bg-gray-900/50 transition-all cursor-pointer group"
+                className="glow-card glass rounded-xl p-6 hover:bg-[var(--bg-glass-hover)] transition-all cursor-pointer group"
                 onClick={() => router.push(`/chat/${session.session_id}`)}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-lg font-semibold group-hover:text-gray-200 transition-colors">
+                      <h3 className="text-lg font-semibold text-[var(--text-primary)]">
                         {session.config_id}
                       </h3>
                       <span className={`px-2 py-1 rounded text-xs ${
                         session.status === 'running'
                           ? 'bg-green-500/20 text-green-400'
-                          : 'bg-gray-500/20 text-gray-400'
+                          : 'bg-gray-500/20 text-[var(--text-secondary)]'
                       }`}>
                         {session.status}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-400 font-mono">
+                    <p className="text-sm text-[var(--text-secondary)] font-mono">
                       Session: {session.session_id.substring(0, 12)}...
                     </p>
-                    <p className="text-sm text-gray-400 font-mono">
+                    <p className="text-sm text-[var(--text-secondary)] font-mono">
                       Container: {session.agent_id.substring(0, 12)}...
                     </p>
                   </div>
@@ -165,7 +168,7 @@ export default function SessionsPage() {
                         e.stopPropagation();
                         router.push(`/chat/${session.session_id}`);
                       }}
-                      className="p-2 bg-gray-700 hover:bg-gray-600 rounded transition-colors"
+                      className="p-2 bg-[var(--bg-glass-hover)] hover:bg-[var(--border-glass)] rounded transition-colors"
                       title="Open chat"
                     >
                       <MessageSquare className="w-5 h-5" />
@@ -175,7 +178,7 @@ export default function SessionsPage() {
                         e.stopPropagation();
                         terminateSession(session.session_id);
                       }}
-                      className="p-2 bg-red-900/70 hover:bg-red-900/90 rounded transition-colors"
+                      className="p-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded transition-colors"
                       title="Terminate session"
                     >
                       <Trash2 className="w-5 h-5" />
@@ -186,45 +189,45 @@ export default function SessionsPage() {
                 {/* Time Info */}
                 <div className="flex gap-6 mb-4 text-sm">
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-gray-500" />
-                    <span className="text-gray-400">Created:</span>
-                    <span>{formatDuration(session.created_at)} ago</span>
+                    <Clock className="w-4 h-4 text-[var(--text-secondary)]" />
+                    <span className="text-[var(--text-secondary)]">Created:</span>
+                    <span className="text-[var(--text-primary)]">{formatDuration(session.created_at)}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-gray-500" />
-                    <span className="text-gray-400">Last activity:</span>
-                    <span>{formatDuration(session.last_active)} ago</span>
+                    <Activity className="w-4 h-4 text-[var(--text-secondary)]" />
+                    <span className="text-[var(--text-secondary)]">Last activity:</span>
+                    <span className="text-[var(--text-primary)]">{formatDuration(session.last_active)}</span>
                   </div>
                 </div>
 
                 {/* Resource Stats */}
                 {session.container_stats && (
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-gray-800">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-[var(--border-glass)]">
                     <div className="flex items-center gap-2">
                       <Cpu className="w-4 h-4 text-blue-400" />
                       <div>
-                        <div className="text-xs text-gray-500">CPU</div>
+                        <div className="text-xs text-[var(--text-secondary)]">CPU</div>
                         <div className="text-sm font-medium">{session.container_stats.cpu_usage.toFixed(1)}%</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <MemoryStick className="w-4 h-4 text-gray-400" />
+                      <MemoryStick className="w-4 h-4 text-[var(--text-secondary)]" />
                       <div>
-                        <div className="text-xs text-gray-500">Memory</div>
+                        <div className="text-xs text-[var(--text-secondary)]">Memory</div>
                         <div className="text-sm font-medium">{session.container_stats.memory_usage}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <HardDrive className="w-4 h-4 text-green-400" />
                       <div>
-                        <div className="text-xs text-gray-500">Network RX</div>
+                        <div className="text-xs text-[var(--text-secondary)]">Network RX</div>
                         <div className="text-sm font-medium">{session.container_stats.network_rx}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <HardDrive className="w-4 h-4 text-orange-400" />
                       <div>
-                        <div className="text-xs text-gray-500">Network TX</div>
+                        <div className="text-xs text-[var(--text-secondary)]">Network TX</div>
                         <div className="text-sm font-medium">{session.container_stats.network_tx}</div>
                       </div>
                     </div>

@@ -131,7 +131,7 @@ export function YAMLPreview({ config }: YAMLPreviewProps) {
         <div className="flex gap-2">
           <button
             onClick={copyYAML}
-            className="p-2 hover:bg-gray-800 rounded transition-colors"
+            className="p-2 hover:bg-[var(--btn-secondary-bg)] rounded transition-colors"
             title="Copy YAML"
           >
             <Copy className="w-5 h-5" />
@@ -139,7 +139,7 @@ export function YAMLPreview({ config }: YAMLPreviewProps) {
           <button
             onClick={downloadYAML}
             disabled={!config.id}
-            className="p-2 hover:bg-gray-800 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-2 hover:bg-[var(--btn-secondary-bg)] rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             title="Download YAML"
           >
             <Download className="w-5 h-5" />
@@ -147,14 +147,14 @@ export function YAMLPreview({ config }: YAMLPreviewProps) {
         </div>
       </div>
 
-      <div className="flex-1 bg-gray-950 rounded-lg overflow-auto">
-        <pre className="p-4 text-sm font-mono text-gray-300">
+      <div className="flex-1 bg-[var(--hljs-bg)] rounded-lg overflow-auto">
+        <pre className="p-4 text-sm font-mono text-[var(--text-primary)]">
           {yamlString}
         </pre>
       </div>
 
       {!config.id && (
-        <p className="text-sm text-yellow-400 mt-4">
+        <p className="text-sm text-yellow-600 dark:text-yellow-400 mt-4">
           ⚠️ Please provide an Agent ID to enable download
         </p>
       )}

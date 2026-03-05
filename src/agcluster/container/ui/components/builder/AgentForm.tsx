@@ -12,6 +12,9 @@ interface AgentFormProps {
   onChange: (config: AgentConfig) => void;
 }
 
+const inputCls = 'w-full px-4 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-primary)] rounded focus:outline-none focus:ring-2 focus:ring-blue-500';
+const selectCls = 'w-full px-4 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-primary)] rounded focus:outline-none focus:ring-2 focus:ring-blue-500';
+
 export function AgentForm({ config, onChange }: AgentFormProps) {
   const updateField = <K extends keyof AgentConfig>(field: K, value: AgentConfig[K]) => {
     onChange({ ...config, [field]: value });
@@ -48,11 +51,11 @@ export function AgentForm({ config, onChange }: AgentFormProps) {
           value={config.id}
           onChange={(e) => updateField('id', e.target.value)}
           placeholder="e.g., my-custom-agent"
-          className="w-full px-4 py-2 bg-gray-900 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={inputCls}
           pattern="[a-z0-9\-_]+"
           title="Lowercase letters, numbers, hyphens, and underscores only"
         />
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="text-xs text-[var(--text-secondary)] mt-1">
           Unique identifier (lowercase, hyphens/underscores allowed)
         </p>
       </div>
@@ -67,9 +70,9 @@ export function AgentForm({ config, onChange }: AgentFormProps) {
           value={config.name}
           onChange={(e) => updateField('name', e.target.value)}
           placeholder="e.g., My Custom Agent"
-          className="w-full px-4 py-2 bg-gray-900 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={inputCls}
         />
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="text-xs text-[var(--text-secondary)] mt-1">
           Display name shown in the dashboard
         </p>
       </div>
@@ -82,7 +85,7 @@ export function AgentForm({ config, onChange }: AgentFormProps) {
           onChange={(e) => updateField('description', e.target.value || undefined)}
           placeholder="Brief description of what this agent does..."
           rows={3}
-          className="w-full px-4 py-2 bg-gray-900 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={inputCls}
         />
       </div>
 
@@ -107,14 +110,14 @@ export function AgentForm({ config, onChange }: AgentFormProps) {
         <select
           value={config.permission_mode || 'acceptEdits'}
           onChange={(e) => updateField('permission_mode', e.target.value as any)}
-          className="w-full px-4 py-2 bg-gray-900 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={selectCls}
         >
           <option value="default">Default</option>
           <option value="acceptEdits">Accept Edits (Auto-approve file changes)</option>
           <option value="plan">Plan Mode (Review before execution)</option>
           <option value="bypassPermissions">Bypass Permissions</option>
         </select>
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="text-xs text-[var(--text-secondary)] mt-1">
           Control how the agent handles file modifications and tool execution
         </p>
       </div>
@@ -134,13 +137,13 @@ export function AgentForm({ config, onChange }: AgentFormProps) {
                 min="50000"
                 max="400000"
                 step="50000"
-                className="flex-1 px-4 py-2 bg-gray-900 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={inputCls + ' flex-1 w-auto'}
               />
-              <span className="text-sm text-gray-400">
+              <span className="text-sm text-[var(--text-secondary)]">
                 ({((config.resource_limits?.cpu_quota || 200000) / 100000).toFixed(1)} CPUs)
               </span>
             </div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-[var(--text-secondary)] mt-1">
               100000 = 1 CPU. Typical: 200000 (2 CPUs)
             </p>
           </div>
@@ -150,7 +153,7 @@ export function AgentForm({ config, onChange }: AgentFormProps) {
             <select
               value={config.resource_limits?.memory_limit || '4g'}
               onChange={(e) => updateResourceLimit('memory_limit', e.target.value)}
-              className="w-full px-4 py-2 bg-gray-900 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={selectCls}
             >
               <option value="2g">2 GB</option>
               <option value="4g">4 GB</option>
@@ -164,7 +167,7 @@ export function AgentForm({ config, onChange }: AgentFormProps) {
             <select
               value={config.resource_limits?.storage_limit || '10g'}
               onChange={(e) => updateResourceLimit('storage_limit', e.target.value)}
-              className="w-full px-4 py-2 bg-gray-900 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={selectCls}
             >
               <option value="5g">5 GB</option>
               <option value="10g">10 GB</option>
@@ -184,16 +187,16 @@ export function AgentForm({ config, onChange }: AgentFormProps) {
           onChange={(e) => updateField('max_turns', parseInt(e.target.value) || undefined)}
           min="10"
           max="500"
-          className="w-full px-4 py-2 bg-gray-900 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={inputCls}
         />
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="text-xs text-[var(--text-secondary)] mt-1">
           Maximum conversation turns before auto-termination
         </p>
       </div>
 
       {/* Multi-Agent Section - Progressive Disclosure */}
       {(config.agents && Object.keys(config.agents).length > 0) || (
-        <div className="pt-6 border-t border-gray-800">
+        <div className="pt-6 border-t border-[var(--border-glass)]">
           <SubAgentEditor
             agents={config.agents}
             onChange={(agents) => updateField('agents', agents)}
@@ -202,11 +205,11 @@ export function AgentForm({ config, onChange }: AgentFormProps) {
       )}
 
       {!config.agents && (
-        <div className="pt-6 border-t border-gray-800">
+        <div className="pt-6 border-t border-[var(--border-glass)]">
           <button
             type="button"
             onClick={() => updateField('agents', {})}
-            className="w-full p-4 border-2 border-dashed border-gray-700 rounded-lg hover:border-gray-500 hover:bg-gray-900/30 transition-colors text-gray-400 hover:text-gray-300"
+            className="w-full p-4 border-2 border-dashed border-[var(--border-glass-hover)] rounded-lg hover:border-[var(--text-secondary)] hover:bg-[var(--bg-glass)] transition-colors text-[var(--text-secondary)]"
           >
             + Enable Multi-Agent Configuration
           </button>
@@ -215,7 +218,7 @@ export function AgentForm({ config, onChange }: AgentFormProps) {
 
       {/* Show SubAgentEditor if agents exist */}
       {config.agents && Object.keys(config.agents).length > 0 && (
-        <div className="pt-6 border-t border-gray-800">
+        <div className="pt-6 border-t border-[var(--border-glass)]">
           <SubAgentEditor
             agents={config.agents}
             onChange={(agents) => updateField('agents', agents)}
@@ -225,11 +228,11 @@ export function AgentForm({ config, onChange }: AgentFormProps) {
 
       {/* MCP Servers Section - Progressive Disclosure */}
       {!config.mcp_servers && (
-        <div className="pt-6 border-t border-gray-800">
+        <div className="pt-6 border-t border-[var(--border-glass)]">
           <button
             type="button"
             onClick={() => updateField('mcp_servers', {})}
-            className="w-full p-4 border-2 border-dashed border-gray-700 rounded-lg hover:border-gray-600 hover:bg-gray-800/20 transition-colors text-gray-400 hover:text-white"
+            className="w-full p-4 border-2 border-dashed border-[var(--border-glass-hover)] rounded-lg hover:border-[var(--text-secondary)] hover:bg-[var(--bg-glass)] transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
           >
             + Add MCP Servers
           </button>
@@ -237,7 +240,7 @@ export function AgentForm({ config, onChange }: AgentFormProps) {
       )}
 
       {config.mcp_servers && Object.keys(config.mcp_servers).length >= 0 && (
-        <div className="pt-6 border-t border-gray-800">
+        <div className="pt-6 border-t border-[var(--border-glass)]">
           <MCPServerEditor
             servers={config.mcp_servers}
             onChange={(servers) => updateField('mcp_servers', servers)}
@@ -246,7 +249,7 @@ export function AgentForm({ config, onChange }: AgentFormProps) {
       )}
 
       {/* Advanced Fields - Collapsible */}
-      <div className="pt-6 border-t border-gray-800">
+      <div className="pt-6 border-t border-[var(--border-glass)]">
         <AdvancedFields
           version={config.version}
           model={config.model}

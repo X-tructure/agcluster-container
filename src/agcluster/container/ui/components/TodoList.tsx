@@ -35,13 +35,13 @@ export function TodoList({ todos }: TodoListProps) {
   const getStatusColor = (status: TodoItem['status']) => {
     switch (status) {
       case 'completed':
-        return 'text-gray-500 line-through';
+        return 'text-[var(--text-secondary)] line-through';
       case 'in_progress':
-        return 'text-gray-300 font-medium';
+        return 'text-[var(--text-primary)] font-medium';
       case 'pending':
-        return 'text-gray-400';
+        return 'text-[var(--text-secondary)]';
       default:
-        return 'text-gray-400';
+        return 'text-[var(--text-secondary)]';
     }
   };
 
@@ -62,15 +62,15 @@ export function TodoList({ todos }: TodoListProps) {
 
   return (
     <div
-      className="p-3 glass rounded-lg border border-gray-800/50"
+      className="p-3 glass rounded-lg border border-[var(--border-glass)]"
       data-testid="todo-list"
     >
-      <h3 className="text-xs font-semibold mb-2 text-gray-300">Tasks</h3>
+      <h3 className="text-xs font-semibold mb-2 text-[var(--text-primary)]">Tasks</h3>
       <div className="space-y-1">
         {todos.map((todo, index) => (
           <div
             key={index}
-            className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-white/5 transition-colors"
+            className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-[var(--btn-secondary-bg)] transition-colors"
             data-testid="todo-item"
             data-status={todo.status}
           >
@@ -83,11 +83,11 @@ export function TodoList({ todos }: TodoListProps) {
           </div>
         ))}
       </div>
-      <div className="mt-2 pt-2 border-t border-gray-800/50 flex items-center gap-3 text-[10px] text-gray-500">
+      <div className="mt-2 pt-2 border-t border-[var(--border-glass)] flex items-center gap-3 text-[10px] text-[var(--text-secondary)]">
         <span>{todos.filter(t => t.status === 'completed').length} done</span>
-        <span className="text-gray-600">·</span>
+        <span className="text-[var(--border-glass-hover)]">·</span>
         <span>{todos.filter(t => t.status === 'in_progress').length} active</span>
-        <span className="text-gray-600">·</span>
+        <span className="text-[var(--border-glass-hover)]">·</span>
         <span>{todos.filter(t => t.status === 'pending').length} pending</span>
       </div>
     </div>

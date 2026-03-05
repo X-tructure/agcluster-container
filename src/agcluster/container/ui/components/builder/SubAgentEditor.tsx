@@ -10,6 +10,8 @@ interface SubAgentEditorProps {
   onChange: (agents: Record<string, AgentDefinition> | undefined) => void;
 }
 
+const inputCls = 'px-3 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-primary)] rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm';
+
 export function SubAgentEditor({ agents, onChange }: SubAgentEditorProps) {
   const [expandedAgents, setExpandedAgents] = useState<Set<string>>(new Set());
 
@@ -22,7 +24,6 @@ export function SubAgentEditor({ agents, onChange }: SubAgentEditorProps) {
       [newKey]: createDefaultSubAgent(),
     };
     onChange(newAgents);
-    // Auto-expand the new agent
     setExpandedAgents(new Set([...expandedAgents, newKey]));
   };
 
@@ -31,7 +32,6 @@ export function SubAgentEditor({ agents, onChange }: SubAgentEditorProps) {
     const newAgents = { ...agents };
     delete newAgents[key];
     onChange(Object.keys(newAgents).length > 0 ? newAgents : undefined);
-    // Remove from expanded set
     const newExpanded = new Set(expandedAgents);
     newExpanded.delete(key);
     setExpandedAgents(newExpanded);
@@ -51,7 +51,6 @@ export function SubAgentEditor({ agents, onChange }: SubAgentEditorProps) {
   const handleRenameAgent = (oldKey: string, newKey: string) => {
     if (!agents || !newKey || newKey === oldKey) return;
 
-    // Check if new key already exists
     if (newKey in agents) {
       alert('A sub-agent with this name already exists');
       return;
@@ -68,7 +67,6 @@ export function SubAgentEditor({ agents, onChange }: SubAgentEditorProps) {
 
     onChange(newAgents);
 
-    // Update expanded state
     if (expandedAgents.has(oldKey)) {
       const newExpanded = new Set(expandedAgents);
       newExpanded.delete(oldKey);
@@ -95,14 +93,14 @@ export function SubAgentEditor({ agents, onChange }: SubAgentEditorProps) {
             <Users className="w-5 h-5" />
             Multi-Agent Configuration
           </h3>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-[var(--text-secondary)] mt-1">
             Define specialized sub-agents for team-based orchestration
           </p>
         </div>
         <button
           type="button"
           onClick={handleAddAgent}
-          className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded transition-colors text-sm"
+          className="flex items-center gap-2 px-4 py-2 bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-primary)] rounded transition-colors text-sm"
         >
           <Plus className="w-4 h-4" />
           Add Sub-Agent
@@ -110,10 +108,10 @@ export function SubAgentEditor({ agents, onChange }: SubAgentEditorProps) {
       </div>
 
       {agentEntries.length === 0 && (
-        <div className="p-6 border-2 border-dashed border-gray-700 rounded-lg text-center">
-          <Users className="w-12 h-12 mx-auto mb-3 text-gray-600" />
-          <p className="text-gray-400 mb-4">No sub-agents defined yet</p>
-          <p className="text-sm text-gray-500">
+        <div className="p-6 border-2 border-dashed border-[var(--border-glass-hover)] rounded-lg text-center">
+          <Users className="w-12 h-12 mx-auto mb-3 text-[var(--text-secondary)]" />
+          <p className="text-[var(--text-secondary)] mb-4">No sub-agents defined yet</p>
+          <p className="text-sm text-[var(--text-secondary)]">
             Click &quot;Add Sub-Agent&quot; to create specialized agents that can be delegated tasks
           </p>
         </div>
@@ -127,15 +125,15 @@ export function SubAgentEditor({ agents, onChange }: SubAgentEditorProps) {
           return (
             <div
               key={key}
-              className="border border-gray-800 rounded-lg bg-gray-900/50 overflow-hidden"
+              className="border border-[var(--border-glass)] rounded-lg bg-[var(--card-bg)] overflow-hidden"
             >
               {/* Card Header */}
-              <div className="flex items-center justify-between p-4 bg-gray-800/50">
+              <div className="flex items-center justify-between p-4 bg-[var(--card-header-bg)]">
                 <div className="flex items-center gap-3 flex-1">
                   <button
                     type="button"
                     onClick={() => toggleExpanded(key)}
-                    className="p-1 hover:bg-gray-700 rounded transition-colors"
+                    className="p-1 hover:bg-[var(--btn-secondary-bg)] rounded transition-colors"
                   >
                     {isExpanded ? (
                       <ChevronDown className="w-5 h-5" />
@@ -148,14 +146,14 @@ export function SubAgentEditor({ agents, onChange }: SubAgentEditorProps) {
                     type="text"
                     value={key}
                     onChange={(e) => handleRenameAgent(key, e.target.value)}
-                    className="px-3 py-1 bg-gray-900 border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium"
+                    className={inputCls + ' font-medium'}
                     placeholder="agent-name"
                     pattern="[a-z0-9\-_]+"
                     title="Lowercase letters, numbers, hyphens, and underscores only"
                   />
 
                   {agent.model && (
-                    <span className="px-2 py-1 bg-gray-800/40 border border-gray-700 rounded text-xs text-gray-300">
+                    <span className="px-2 py-1 bg-[var(--btn-secondary-bg)] border border-[var(--border-glass)] rounded text-xs text-[var(--text-secondary)]">
                       {agent.model}
                     </span>
                   )}
@@ -164,7 +162,7 @@ export function SubAgentEditor({ agents, onChange }: SubAgentEditorProps) {
                 <button
                   type="button"
                   onClick={() => handleRemoveAgent(key)}
-                  className="p-2 hover:bg-red-900/50 rounded transition-colors text-red-400"
+                  className="p-2 hover:bg-red-500/20 rounded transition-colors text-red-400"
                   title="Remove sub-agent"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -184,7 +182,7 @@ export function SubAgentEditor({ agents, onChange }: SubAgentEditorProps) {
                       onChange={(e) => handleUpdateAgent(key, 'description', e.target.value)}
                       placeholder="Frontend development with React, Next.js, and modern CSS frameworks..."
                       rows={2}
-                      className="w-full px-3 py-2 bg-gray-900 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                      className={inputCls + ' w-full'}
                     />
                   </div>
 
@@ -198,7 +196,7 @@ export function SubAgentEditor({ agents, onChange }: SubAgentEditorProps) {
                       onChange={(e) => handleUpdateAgent(key, 'prompt', e.target.value)}
                       placeholder="You are a frontend specialist with expertise in..."
                       rows={6}
-                      className="w-full px-3 py-2 bg-gray-900 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-mono"
+                      className={inputCls + ' w-full font-mono'}
                     />
                   </div>
 
@@ -211,7 +209,7 @@ export function SubAgentEditor({ agents, onChange }: SubAgentEditorProps) {
                       selected={agent.tools || []}
                       onChange={(tools) => handleUpdateAgent(key, 'tools', tools)}
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-[var(--text-secondary)] mt-1">
                       Leave empty to inherit tools from parent agent
                     </p>
                   </div>
@@ -224,7 +222,7 @@ export function SubAgentEditor({ agents, onChange }: SubAgentEditorProps) {
                     <select
                       value={agent.model || 'sonnet'}
                       onChange={(e) => handleUpdateAgent(key, 'model', e.target.value)}
-                      className="w-full px-3 py-2 bg-gray-900 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                      className={inputCls + ' w-full'}
                     >
                       <option value="sonnet">Sonnet (Balanced)</option>
                       <option value="opus">Opus (Most Capable)</option>
@@ -240,8 +238,8 @@ export function SubAgentEditor({ agents, onChange }: SubAgentEditorProps) {
       </div>
 
       {agentEntries.length > 0 && (
-        <div className="p-3 bg-gray-900/40 border border-gray-700/50 rounded text-xs text-gray-400">
-          <strong className="text-gray-300">Multi-Agent Mode Active:</strong> The main agent can
+        <div className="p-3 bg-[var(--input-bg-secondary)] border border-[var(--border-glass)] rounded text-xs text-[var(--text-secondary)]">
+          <strong className="text-[var(--text-primary)]">Multi-Agent Mode Active:</strong> The main agent can
           delegate tasks to these sub-agents using the Task tool. Make sure the main agent has the
           Task tool enabled.
         </div>

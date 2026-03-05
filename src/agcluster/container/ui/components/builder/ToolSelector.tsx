@@ -47,13 +47,13 @@ export function ToolSelector({ selected, onChange }: ToolSelectorProps) {
         <div className="flex gap-2">
           <button
             onClick={selectAll}
-            className="text-xs px-3 py-1 bg-gray-800 hover:bg-gray-700 rounded"
+            className="text-xs px-3 py-1 bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-primary)] rounded"
           >
             Select All
           </button>
           <button
             onClick={clearAll}
-            className="text-xs px-3 py-1 bg-gray-800 hover:bg-gray-700 rounded"
+            className="text-xs px-3 py-1 bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-primary)] rounded"
           >
             Clear All
           </button>
@@ -61,15 +61,15 @@ export function ToolSelector({ selected, onChange }: ToolSelectorProps) {
       </div>
 
       {categories.map(category => (
-        <div key={category} className="bg-gray-900/50 rounded-lg p-4">
-          <h4 className="text-sm font-semibold text-gray-300 mb-3">{category}</h4>
+        <div key={category} className="bg-[var(--input-bg-secondary)] rounded-lg p-4">
+          <h4 className="text-sm font-semibold text-[var(--text-primary)] mb-3">{category}</h4>
           <div className="grid grid-cols-2 gap-2">
             {AVAILABLE_TOOLS
               .filter(t => t.category === category)
               .map(tool => (
                 <label
                   key={tool.name}
-                  className="flex items-start gap-2 p-3 rounded border border-gray-800 cursor-pointer hover:bg-gray-800 transition-colors"
+                  className="flex items-start gap-2 p-3 rounded border border-[var(--input-border)] cursor-pointer hover:bg-[var(--btn-secondary-bg)] transition-colors"
                 >
                   <input
                     type="checkbox"
@@ -78,8 +78,8 @@ export function ToolSelector({ selected, onChange }: ToolSelectorProps) {
                     className="mt-1 w-4 h-4"
                   />
                   <div className="flex-1">
-                    <div className="text-sm font-medium">{tool.name}</div>
-                    <div className="text-xs text-gray-500">{tool.description}</div>
+                    <div className="text-sm font-medium text-[var(--text-primary)]">{tool.name}</div>
+                    <div className="text-xs text-[var(--text-secondary)]">{tool.description}</div>
                   </div>
                 </label>
               ))}

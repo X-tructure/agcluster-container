@@ -92,7 +92,7 @@ export function Timeline({
     <div className="flex-1 overflow-y-auto" data-testid="timeline">
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-3">
         {timeline.length === 0 && !isLoading && (
-          <div className="text-center text-gray-500 mt-12">
+          <div className="text-center text-[var(--text-secondary)] mt-12">
             <p className="text-xl mb-2">Ready to assist</p>
             <p className="text-sm">Send a message to get started</p>
           </div>
@@ -127,7 +127,7 @@ export function Timeline({
         })}
 
         {isLoading && (
-          <div className="flex items-center gap-2 text-gray-400 justify-center py-4">
+          <div className="flex items-center gap-2 text-[var(--text-secondary)] justify-center py-4">
             <Loader2 className="w-4 h-4 animate-spin" />
             <span className="text-sm">Agent is thinking...</span>
           </div>

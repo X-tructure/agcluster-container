@@ -79,19 +79,19 @@ export function ToolExecutionPanel({ toolEvents, isConnected }: ToolExecutionPan
 
   return (
     <div
-      className="h-full flex flex-col glass border-l border-gray-800"
+      className="h-full flex flex-col glass border-l border-[var(--border-glass)]"
       data-testid="tool-execution-panel"
     >
       {/* Header */}
-      <div className="p-4 border-b border-gray-800">
+      <div className="p-4 border-b border-[var(--border-glass)]">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-semibold">Tool Execution</h3>
           <div className="flex items-center gap-2">
             <div
-              className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-500'}`}
+              className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-[var(--text-secondary)]'}`}
               title={isConnected ? 'Connected' : 'Disconnected'}
             />
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-[var(--text-secondary)]">
               {toolEvents.length} {toolEvents.length === 1 ? 'event' : 'events'}
             </span>
           </div>
@@ -101,7 +101,7 @@ export function ToolExecutionPanel({ toolEvents, isConnected }: ToolExecutionPan
       {/* Tool Events List */}
       <div className="flex-1 overflow-y-auto p-4 space-y-2">
         {toolEvents.length === 0 && (
-          <div className="text-center text-gray-500 text-sm mt-12">
+          <div className="text-center text-[var(--text-secondary)] text-sm mt-12">
             <p>No tool executions yet</p>
             <p className="text-xs mt-2">Tools will appear here as the agent uses them</p>
           </div>
@@ -119,7 +119,7 @@ export function ToolExecutionPanel({ toolEvents, isConnected }: ToolExecutionPan
               {/* Event Header */}
               <button
                 onClick={() => toggleExpand(index)}
-                className="w-full p-3 flex items-start gap-3 hover:bg-white/5 transition-colors text-left"
+                className="w-full p-3 flex items-start gap-3 hover:bg-[var(--btn-secondary-bg)] transition-colors text-left"
               >
                 <div className="mt-0.5" data-testid="tool-status">
                   {getStatusIcon(event)}
@@ -130,19 +130,19 @@ export function ToolExecutionPanel({ toolEvents, isConnected }: ToolExecutionPan
                       {event.tool_name}
                     </span>
                     {event.duration_ms && (
-                      <span className="text-xs text-gray-400">
+                      <span className="text-xs text-[var(--text-secondary)]">
                         ({event.duration_ms}ms)
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-[var(--text-secondary)] mt-1">
                     {formatTimestamp(event.timestamp)}
                   </p>
                 </div>
                 {isExpanded ? (
-                  <ChevronDown className="w-4 h-4 text-gray-400" />
+                  <ChevronDown className="w-4 h-4 text-[var(--text-secondary)]" />
                 ) : (
-                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                  <ChevronRight className="w-4 h-4 text-[var(--text-secondary)]" />
                 )}
               </button>
 
@@ -151,47 +151,46 @@ export function ToolExecutionPanel({ toolEvents, isConnected }: ToolExecutionPan
                 <div className="px-3 pb-3 space-y-2">
                   {event.tool_input !== undefined && event.tool_input !== null && (
                     <div>
-                      <p className="text-xs text-gray-400 mb-1">Input:</p>
+                      <p className="text-xs text-[var(--text-secondary)] mb-1">Input:</p>
                       <div className="text-xs glass p-2 rounded overflow-x-auto">
-                        {/* Special formatting for TodoWrite */}
                         {event.tool_name === 'TodoWrite' && typeof event.tool_input === 'object' && event.tool_input && 'todos' in event.tool_input && Array.isArray((event.tool_input as any).todos) ? (
                           <div className="space-y-1">
                             {(event.tool_input as any).todos.map((todo: any, idx: number) => (
                               <div key={idx} className="flex items-start gap-2">
-                                <span className="text-gray-500">{idx + 1}.</span>
-                                <span className="text-gray-300">{todo.content || todo}</span>
+                                <span className="text-[var(--text-secondary)]">{idx + 1}.</span>
+                                <span className="text-[var(--text-primary)]">{todo.content || todo}</span>
                               </div>
                             ))}
                           </div>
                         ) : (
-                          <pre>{JSON.stringify(event.tool_input, null, 2)}</pre>
+                          <pre className="text-[var(--text-primary)]">{JSON.stringify(event.tool_input, null, 2)}</pre>
                         )}
                       </div>
                     </div>
                   )}
                   {event.output && event.status === 'completed' && (
                     <div>
-                      <p className="text-xs text-gray-400 mb-1">Output:</p>
-                      <pre className="text-xs glass p-2 rounded overflow-x-auto text-green-300">
+                      <p className="text-xs text-[var(--text-secondary)] mb-1">Output:</p>
+                      <pre className="text-xs glass p-2 rounded overflow-x-auto text-green-600 dark:text-green-300">
                         {typeof event.output === 'string' ? event.output : JSON.stringify(event.output, null, 2)}
                       </pre>
                     </div>
                   )}
                   {event.error && (
                     <div>
-                      <p className="text-xs text-red-400 mb-1">Error:</p>
-                      <pre className="text-xs glass p-2 rounded overflow-x-auto text-red-400">
+                      <p className="text-xs text-red-500 dark:text-red-400 mb-1">Error:</p>
+                      <pre className="text-xs glass p-2 rounded overflow-x-auto text-red-500 dark:text-red-400">
                         {event.error}
                       </pre>
                     </div>
                   )}
                   <div className="flex items-center gap-2 text-xs">
-                    <span className="text-gray-400">Status:</span>
+                    <span className="text-[var(--text-secondary)]">Status:</span>
                     <span className={`font-semibold ${
-                      (event.status === 'completed' || event.type === 'tool_complete') ? 'text-green-400' :
-                      (event.status === 'error' || event.type === 'tool_error') ? 'text-red-400' :
-                      (event.status === 'in_progress' || event.type === 'tool_progress') ? 'text-yellow-400' :
-                      'text-gray-400'
+                      (event.status === 'completed' || event.type === 'tool_complete') ? 'text-green-600 dark:text-green-400' :
+                      (event.status === 'error' || event.type === 'tool_error') ? 'text-red-500 dark:text-red-400' :
+                      (event.status === 'in_progress' || event.type === 'tool_progress') ? 'text-yellow-600 dark:text-yellow-400' :
+                      'text-[var(--text-secondary)]'
                     }`}>
                       {event.status || event.type}
                     </span>

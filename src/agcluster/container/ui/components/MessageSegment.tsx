@@ -33,7 +33,7 @@ export function MessageSegment({ role, content, timestamp }: MessageSegmentProps
               : 'glass text-gray-100'
           }`}
         >
-          <div className="prose prose-invert max-w-none">
+          <div className="prose dark:prose-invert max-w-none">
             {content.split('\n').map((line, i) => (
               <p key={i} className={i > 0 ? 'mt-2' : ''}>
                 {line || '\u00A0'}

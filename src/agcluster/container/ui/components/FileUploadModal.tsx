@@ -139,13 +139,13 @@ export function FileUploadModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-gray-900 border border-gray-800 rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[80vh] flex flex-col">
+      <div className="bg-[var(--bg-base)] border border-[var(--border-glass)] rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[80vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-800">
+        <div className="flex items-center justify-between p-4 border-b border-[var(--border-glass)]">
           <h2 className="text-lg font-semibold">Upload Files</h2>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-gray-800 rounded"
+            className="p-1 hover:bg-[var(--btn-secondary-bg)] rounded"
             disabled={uploading}
           >
             <X className="w-5 h-5" />
@@ -156,7 +156,7 @@ export function FileUploadModal({
         <div className="flex-1 overflow-y-auto p-4">
           {/* Target Path */}
           <div className="mb-4">
-            <label className="block text-sm text-gray-400 mb-1">
+            <label className="block text-sm text-[var(--text-secondary)] mb-1">
               Target Directory (relative to /workspace)
             </label>
             <input
@@ -165,17 +165,17 @@ export function FileUploadModal({
               onChange={(e) => setTargetPath(e.target.value)}
               placeholder="Leave empty for workspace root, or enter folder path (e.g., data, models/bert)"
               disabled={uploading}
-              className={`w-full px-3 py-2 bg-gray-800 rounded text-sm focus:outline-none focus:ring-2 ${
-                pathError ? 'border border-red-500 focus:ring-red-500' : 'focus:ring-blue-500'
+              className={`w-full px-3 py-2 bg-[var(--input-bg)] border rounded text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:ring-2 ${
+                pathError ? 'border-red-500 focus:ring-red-500' : 'border-[var(--input-border)] focus:ring-slate-400/50'
               } disabled:opacity-50`}
             />
             {pathError ? (
-              <div className="mt-1 flex items-center gap-1 text-xs text-red-400">
+              <div className="mt-1 flex items-center gap-1 text-xs text-red-500 dark:text-red-400">
                 <AlertCircle className="w-3 h-3" />
                 {pathError}
               </div>
             ) : (
-              <div className="mt-1 text-xs text-gray-500">
+              <div className="mt-1 text-xs text-[var(--text-secondary)]">
                 Files will be uploaded to: /workspace{targetPath ? `/${targetPath}` : ''}
               </div>
             )}
@@ -193,7 +193,7 @@ export function FileUploadModal({
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-700 hover:border-gray-600 rounded-lg transition-colors"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-[var(--border-glass-hover)] hover:border-[var(--text-secondary)] rounded-lg transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               disabled={uploading}
             >
               <Upload className="w-5 h-5" />
@@ -205,10 +205,10 @@ export function FileUploadModal({
           {selectedFiles.length > 0 && (
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm text-gray-400">
+                <label className="block text-sm text-[var(--text-secondary)]">
                   Selected Files ({selectedFiles.length})
                 </label>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-[var(--text-secondary)]">
                   Total: {formatFileSize(totalSize)}
                 </span>
               </div>
@@ -216,22 +216,22 @@ export function FileUploadModal({
                 {selectedFiles.map((file, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between gap-2 px-3 py-2 bg-gray-800 rounded"
+                    className="flex items-center justify-between gap-2 px-3 py-2 bg-[var(--input-bg-secondary)] rounded border border-[var(--border-glass)]"
                   >
                     <div className="flex items-center gap-2 flex-1 min-w-0">
-                      <FileIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                      <FileIcon className="w-4 h-4 text-[var(--text-secondary)] flex-shrink-0" />
                       <span className="text-sm truncate" title={file.name}>
                         {file.name}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-[var(--text-secondary)]">
                         {formatFileSize(file.size)}
                       </span>
                       {!uploading && (
                         <button
                           onClick={() => removeFile(index)}
-                          className="p-1 hover:bg-gray-700 rounded"
+                          className="p-1 hover:bg-[var(--btn-secondary-bg)] rounded"
                         >
                           <X className="w-3 h-3" />
                         </button>
@@ -254,7 +254,7 @@ export function FileUploadModal({
                   className="rounded"
                   disabled={uploading}
                 />
-                <span className="text-gray-400">
+                <span className="text-[var(--text-secondary)]">
                   Overwrite existing files
                 </span>
               </label>
@@ -263,9 +263,9 @@ export function FileUploadModal({
 
           {/* Error Message */}
           {error && (
-            <div className="mb-4 p-3 bg-red-900/20 border border-red-900/50 rounded flex items-start gap-2">
-              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-              <div className="flex-1 text-sm text-red-200">
+            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/50 rounded flex items-start gap-2">
+              <AlertCircle className="w-5 h-5 text-red-500 dark:text-red-400 flex-shrink-0 mt-0.5" />
+              <div className="flex-1 text-sm text-red-600 dark:text-red-200">
                 {error}
               </div>
             </div>
@@ -273,9 +273,9 @@ export function FileUploadModal({
 
           {/* Success Message */}
           {success && (
-            <div className="mb-4 p-3 bg-green-900/20 border border-green-900/50 rounded flex items-start gap-2">
-              <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-              <div className="flex-1 text-sm text-green-200">
+            <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-900/50 rounded flex items-start gap-2">
+              <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+              <div className="flex-1 text-sm text-green-700 dark:text-green-200">
                 Successfully uploaded {success.total_files} file(s)
               </div>
             </div>
@@ -283,22 +283,22 @@ export function FileUploadModal({
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-800 flex justify-end gap-2">
+        <div className="p-4 border-t border-[var(--border-glass)] flex justify-end gap-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm hover:bg-gray-800 rounded"
+            className="px-4 py-2 text-sm hover:bg-[var(--btn-secondary-bg)] rounded text-[var(--text-primary)] transition-colors"
             disabled={uploading}
           >
             Cancel
           </button>
           <button
             onClick={handleUpload}
-            className="px-4 py-2 text-sm bg-gray-800/50 hover:bg-gray-700/50 rounded flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            className="px-4 py-2 text-sm bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] rounded flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-[var(--text-primary)]"
             disabled={uploading || selectedFiles.length === 0 || pathError !== null}
           >
             {uploading ? (
               <>
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-[var(--text-secondary)] border-t-[var(--text-primary)] rounded-full animate-spin" />
                 <span>Uploading...</span>
               </>
             ) : (

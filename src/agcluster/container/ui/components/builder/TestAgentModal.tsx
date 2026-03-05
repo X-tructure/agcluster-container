@@ -127,17 +127,17 @@ export function TestAgentModal({ config, onClose }: TestAgentModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-900 rounded-lg w-full max-w-4xl h-3/4 flex flex-col border border-gray-800">
+    <div className="fixed inset-0 bg-black/60 dark:bg-black/80 flex items-center justify-center z-50 p-4">
+      <div className="bg-[var(--bg-base)] rounded-lg w-full max-w-4xl h-3/4 flex flex-col border border-[var(--border-glass)]">
         {/* Header */}
-        <div className="p-4 border-b border-gray-800 flex justify-between items-center">
+        <div className="p-4 border-b border-[var(--border-glass)] flex justify-between items-center">
           <div>
             <h3 className="font-semibold text-lg">Test Agent: {config.name || 'Unnamed Agent'}</h3>
-            <p className="text-xs text-gray-400">Test your configuration before saving</p>
+            <p className="text-xs text-[var(--text-secondary)]">Test your configuration before saving</p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-800 rounded transition-colors"
+            className="p-2 hover:bg-[var(--btn-secondary-bg)] rounded transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -156,14 +156,14 @@ export function TestAgentModal({ config, onClose }: TestAgentModalProps) {
                   placeholder="sk-ant-..."
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-primary)] rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   disabled={launching}
                 />
               </div>
 
-              <div className="bg-gray-900/40 border border-gray-700/50 rounded p-4 text-sm">
+              <div className="bg-[var(--input-bg-secondary)] border border-[var(--border-glass)] rounded p-4 text-sm">
                 <p className="font-medium mb-2">Testing Configuration:</p>
-                <ul className="text-xs text-gray-300 space-y-1">
+                <ul className="text-xs text-[var(--text-secondary)] space-y-1">
                   <li>• Tools: {config.allowed_tools?.length || 0} selected</li>
                   <li>• CPU: {((config.resource_limits?.cpu_quota || 200000) / 100000).toFixed(1)} cores</li>
                   <li>• Memory: {config.resource_limits?.memory_limit || '4g'}</li>
@@ -174,7 +174,7 @@ export function TestAgentModal({ config, onClose }: TestAgentModalProps) {
               <button
                 onClick={launchTest}
                 disabled={!apiKey || launching}
-                className="w-full px-4 py-3 bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed rounded transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-primary)] disabled:opacity-50 disabled:cursor-not-allowed rounded transition-colors flex items-center justify-center gap-2"
               >
                 {launching ? (
                   <>
@@ -192,7 +192,7 @@ export function TestAgentModal({ config, onClose }: TestAgentModalProps) {
           <>
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
               {messages.length === 0 && (
-                <div className="text-center text-gray-500 mt-12">
+                <div className="text-center text-[var(--text-secondary)] mt-12">
                   <p className="text-lg mb-2">Test agent is ready</p>
                   <p className="text-sm">Send a message to test your configuration</p>
                 </div>
@@ -206,12 +206,12 @@ export function TestAgentModal({ config, onClose }: TestAgentModalProps) {
                   <div
                     className={`max-w-2xl rounded-xl p-4 ${
                       msg.role === 'user'
-                        ? 'bg-gray-700 text-white'
-                        : 'bg-gray-800 border border-gray-700'
+                        ? 'bg-[var(--btn-secondary-bg)] text-[var(--text-primary)]'
+                        : 'bg-[var(--card-bg)] border border-[var(--border-glass)]'
                     }`}
                   >
                     {msg.role === 'assistant' ? (
-                      <div className="prose prose-invert prose-sm max-w-none">
+                      <div className="prose dark:prose-invert prose-sm max-w-none">
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
                           {msg.content}
                         </ReactMarkdown>
@@ -224,7 +224,7 @@ export function TestAgentModal({ config, onClose }: TestAgentModalProps) {
               ))}
 
               {isLoading && (
-                <div className="flex items-center gap-2 text-gray-400">
+                <div className="flex items-center gap-2 text-[var(--text-secondary)]">
                   <Loader2 className="w-4 h-4 animate-spin" />
                   <span className="text-sm">Agent is thinking...</span>
                 </div>
@@ -238,19 +238,19 @@ export function TestAgentModal({ config, onClose }: TestAgentModalProps) {
             </div>
 
             {/* Input Form */}
-            <form onSubmit={handleSubmit} className="p-4 border-t border-gray-800">
+            <form onSubmit={handleSubmit} className="p-4 border-t border-[var(--border-glass)]">
               <div className="flex gap-3">
                 <input
                   value={input}
                   onChange={handleInputChange}
                   placeholder="Test message..."
                   disabled={isLoading}
-                  className="flex-1 px-4 py-2 bg-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-4 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-primary)] rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
                   type="submit"
                   disabled={isLoading || !input.trim()}
-                  className="px-6 py-2 bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed rounded transition-colors flex items-center gap-2"
+                  className="px-6 py-2 bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-primary)] disabled:opacity-50 disabled:cursor-not-allowed rounded transition-colors flex items-center gap-2"
                 >
                   {isLoading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />

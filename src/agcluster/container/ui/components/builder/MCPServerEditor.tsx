@@ -9,6 +9,8 @@ interface MCPServerEditorProps {
   onChange: (servers: Record<string, McpServerConfig> | undefined) => void;
 }
 
+const inputCls = 'px-3 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-primary)] rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm';
+
 export function MCPServerEditor({ servers, onChange }: MCPServerEditorProps) {
   const [expandedServers, setExpandedServers] = useState<Set<string>>(new Set());
 
@@ -64,14 +66,14 @@ export function MCPServerEditor({ servers, onChange }: MCPServerEditorProps) {
             <Server className="w-5 h-5" />
             MCP Servers
           </h3>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-[var(--text-secondary)] mt-1">
             Configure Model Context Protocol servers for external tool integrations
           </p>
         </div>
         <button
           type="button"
           onClick={handleAddServer}
-          className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded transition-colors text-sm"
+          className="flex items-center gap-2 px-4 py-2 bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-primary)] rounded transition-colors text-sm"
         >
           <Plus className="w-4 h-4" />
           Add MCP Server
@@ -79,10 +81,10 @@ export function MCPServerEditor({ servers, onChange }: MCPServerEditorProps) {
       </div>
 
       {serverEntries.length === 0 && (
-        <div className="p-6 border-2 border-dashed border-gray-700 rounded-lg text-center">
-          <Server className="w-12 h-12 mx-auto mb-3 text-gray-600" />
-          <p className="text-gray-400 mb-2">No MCP servers configured</p>
-          <p className="text-sm text-gray-500">
+        <div className="p-6 border-2 border-dashed border-[var(--border-glass-hover)] rounded-lg text-center">
+          <Server className="w-12 h-12 mx-auto mb-3 text-[var(--text-secondary)]" />
+          <p className="text-[var(--text-secondary)] mb-2">No MCP servers configured</p>
+          <p className="text-sm text-[var(--text-secondary)]">
             MCP servers provide additional tools and resources beyond built-in capabilities
           </p>
         </div>
@@ -94,13 +96,13 @@ export function MCPServerEditor({ servers, onChange }: MCPServerEditorProps) {
           const serverType = server.type || 'stdio';
 
           return (
-            <div key={key} className="border border-gray-800 rounded-lg bg-gray-900/50">
-              <div className="flex items-center justify-between p-4 bg-gray-800/50">
+            <div key={key} className="border border-[var(--border-glass)] rounded-lg bg-[var(--card-bg)]">
+              <div className="flex items-center justify-between p-4 bg-[var(--card-header-bg)]">
                 <div className="flex items-center gap-3 flex-1">
                   <button
                     type="button"
                     onClick={() => toggleExpanded(key)}
-                    className="p-1 hover:bg-gray-700 rounded"
+                    className="p-1 hover:bg-[var(--btn-secondary-bg)] rounded"
                   >
                     {isExpanded ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                   </button>
@@ -108,16 +110,16 @@ export function MCPServerEditor({ servers, onChange }: MCPServerEditorProps) {
                     type="text"
                     value={key}
                     onChange={(e) => handleRenameServer(key, e.target.value)}
-                    className="px-3 py-1 bg-gray-900 border border-gray-700 rounded focus:ring-2 focus:ring-green-500 text-sm font-medium"
+                    className={inputCls + ' font-medium'}
                   />
-                  <span className="px-2 py-1 bg-green-900/30 border border-green-500/30 rounded text-xs text-green-300">
+                  <span className="px-2 py-1 bg-green-500/10 border border-green-500/30 rounded text-xs text-green-600 dark:text-green-300">
                     {serverType}
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => handleRemoveServer(key)}
-                  className="p-2 hover:bg-red-900/50 rounded text-red-400"
+                  className="p-2 hover:bg-red-500/20 rounded text-red-400"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -133,7 +135,7 @@ export function MCPServerEditor({ servers, onChange }: MCPServerEditorProps) {
                         const type = e.target.value as 'stdio' | 'sse' | 'http';
                         handleUpdateServer(key, createDefaultMcpServer(type));
                       }}
-                      className="w-full px-3 py-2 bg-gray-900 border border-gray-800 rounded focus:ring-2 focus:ring-green-500 text-sm"
+                      className={inputCls + ' w-full'}
                     >
                       <option value="stdio">STDIO (Standard I/O)</option>
                       <option value="sse">SSE (Server-Sent Events)</option>
@@ -149,7 +151,7 @@ export function MCPServerEditor({ servers, onChange }: MCPServerEditorProps) {
                           type="text"
                           value={server.command}
                           onChange={(e) => handleUpdateServer(key, { ...server, command: e.target.value })}
-                          className="w-full px-3 py-2 bg-gray-900 border border-gray-800 rounded focus:ring-2 focus:ring-green-500 text-sm font-mono"
+                          className={inputCls + ' w-full font-mono'}
                           placeholder="node"
                         />
                       </div>
@@ -159,7 +161,7 @@ export function MCPServerEditor({ servers, onChange }: MCPServerEditorProps) {
                           type="text"
                           value={(server.args || []).join(', ')}
                           onChange={(e) => handleUpdateServer(key, { ...server, args: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
-                          className="w-full px-3 py-2 bg-gray-900 border border-gray-800 rounded focus:ring-2 focus:ring-green-500 text-sm font-mono"
+                          className={inputCls + ' w-full font-mono'}
                           placeholder="./server.js, --port=3000"
                         />
                       </div>
@@ -173,7 +175,7 @@ export function MCPServerEditor({ servers, onChange }: MCPServerEditorProps) {
                         type="url"
                         value={server.url}
                         onChange={(e) => handleUpdateServer(key, { ...server, url: e.target.value })}
-                        className="w-full px-3 py-2 bg-gray-900 border border-gray-800 rounded focus:ring-2 focus:ring-green-500 text-sm font-mono"
+                        className={inputCls + ' w-full font-mono'}
                         placeholder="http://localhost:3000/mcp"
                       />
                     </div>
@@ -182,7 +184,7 @@ export function MCPServerEditor({ servers, onChange }: MCPServerEditorProps) {
                   {/* Environment Variables */}
                   <div>
                     <label className="block text-sm font-medium mb-2">Environment Variables</label>
-                    <p className="text-xs text-gray-500 mb-2">
+                    <p className="text-xs text-[var(--text-secondary)] mb-2">
                       Use placeholders like {'${GITHUB_TOKEN}'} for runtime credentials
                     </p>
                     <textarea
@@ -195,13 +197,12 @@ export function MCPServerEditor({ servers, onChange }: MCPServerEditorProps) {
                             env[k.trim()] = vParts.join('=').trim();
                           }
                         });
-                        // Only update env for stdio servers (type undefined or 'stdio')
                         if (server.type !== 'sse' && server.type !== 'http') {
                           handleUpdateServer(key, { ...server, env: Object.keys(env).length > 0 ? env : undefined } as McpServerConfig);
                         }
                       }}
                       rows={3}
-                      className="w-full px-3 py-2 bg-gray-900 border border-gray-800 rounded focus:ring-2 focus:ring-green-500 text-sm font-mono"
+                      className={inputCls + ' w-full font-mono'}
                       placeholder="GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_TOKEN}&#10;API_KEY=${API_KEY}"
                     />
                   </div>

@@ -7,20 +7,23 @@ interface SystemPromptEditorProps {
   onChange: (value: SystemPrompt) => void;
 }
 
+const inputCls = 'w-full px-4 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-primary)] rounded focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm';
+const btnBase = 'px-4 py-2 rounded text-sm font-medium transition-colors';
+const btnActive = `${btnBase} bg-[var(--btn-secondary-hover)] text-[var(--text-primary)]`;
+const btnInactive = `${btnBase} bg-[var(--input-bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--btn-secondary-bg)]`;
+
 export function SystemPromptEditor({ value, onChange }: SystemPromptEditorProps) {
   const isPreset = isSystemPromptPreset(value);
   const promptType = isPreset ? 'preset' : 'custom';
 
   const handleTypeChange = (newType: 'custom' | 'preset') => {
     if (newType === 'preset') {
-      // Switch to preset mode
       onChange({
         type: 'preset',
         preset: 'claude_code',
         append: '',
       });
     } else {
-      // Switch to custom mode
       onChange('');
     }
   };
@@ -47,26 +50,14 @@ export function SystemPromptEditor({ value, onChange }: SystemPromptEditorProps)
         <button
           type="button"
           onClick={() => handleTypeChange('preset')}
-          className={`
-            px-4 py-2 rounded text-sm font-medium transition-colors
-            ${promptType === 'preset'
-              ? 'bg-gray-700 text-white'
-              : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-            }
-          `}
+          className={promptType === 'preset' ? btnActive : btnInactive}
         >
           Preset (Claude Code)
         </button>
         <button
           type="button"
           onClick={() => handleTypeChange('custom')}
-          className={`
-            px-4 py-2 rounded text-sm font-medium transition-colors
-            ${promptType === 'custom'
-              ? 'bg-gray-700 text-white'
-              : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-            }
-          `}
+          className={promptType === 'custom' ? btnActive : btnInactive}
         >
           Custom
         </button>
@@ -75,18 +66,18 @@ export function SystemPromptEditor({ value, onChange }: SystemPromptEditorProps)
       {/* Preset Mode */}
       {isPreset && (
         <div className="space-y-3">
-          <div className="p-3 bg-gray-900/40 border border-gray-700/50 rounded text-sm">
-            <p className="text-gray-300 mb-1">
+          <div className="p-3 bg-[var(--input-bg-secondary)] border border-[var(--border-glass)] rounded text-sm">
+            <p className="text-[var(--text-primary)] mb-1">
               <strong>Using Claude Code Preset</strong>
             </p>
-            <p className="text-gray-400 text-xs">
+            <p className="text-[var(--text-secondary)] text-xs">
               This preset includes optimized instructions for software development, TDD principles,
               and tool usage. You can add additional instructions below.
             </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2 text-gray-300">
+            <label className="block text-sm font-medium mb-2 text-[var(--text-primary)]">
               Additional Instructions (Optional)
             </label>
             <textarea
@@ -94,9 +85,9 @@ export function SystemPromptEditor({ value, onChange }: SystemPromptEditorProps)
               onChange={(e) => handleAppendChange(e.target.value)}
               placeholder="Add any additional instructions to append to the preset..."
               rows={5}
-              className="w-full px-4 py-2 bg-gray-900 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+              className={inputCls}
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-[var(--text-secondary)] mt-1">
               These instructions will be appended to the claude_code preset
             </p>
           </div>
@@ -111,9 +102,9 @@ export function SystemPromptEditor({ value, onChange }: SystemPromptEditorProps)
             onChange={(e) => handleCustomChange(e.target.value)}
             placeholder="You are a helpful assistant that specializes in..."
             rows={10}
-            className="w-full px-4 py-2 bg-gray-900 border border-gray-800 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+            className={inputCls}
           />
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-[var(--text-secondary)] mt-1">
             Complete custom system prompt that defines the agent&apos;s behavior
           </p>
         </div>

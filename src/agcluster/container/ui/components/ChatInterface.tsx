@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { ArrowLeft, Send, Loader2, StopCircle, PanelRightOpen, PanelRightClose, XCircle, CheckCircle, AlertCircle, Maximize2, Minimize2, ChevronDown, ChevronRight, Paperclip } from 'lucide-react';
+import { ArrowLeft, Send, Loader2, StopCircle, PanelRightOpen, PanelRightClose, XCircle, AlertCircle, Maximize2, Minimize2, ChevronDown, ChevronRight, Paperclip } from 'lucide-react';
 import { useToolStream } from '../lib/use-tool-stream';
 import { ToolExecutionPanel } from './ToolExecutionPanel';
 import { TodoList } from './TodoList';
@@ -341,45 +341,65 @@ export function ChatInterface({ sessionId, apiKey, onBack }: ChatInterfaceProps)
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-gray-950 via-black to-gray-950 text-white">
+    <div className="h-screen flex flex-col bg-[var(--bg-base)] text-[var(--text-primary)]">
       {/* Header */}
-      <header className="border-b border-gray-800/50 backdrop-blur-xl bg-black/40 flex-shrink-0">
+      <header className="border-b border-[var(--border-glass)] backdrop-blur-xl bg-[var(--bg-glass)] flex-shrink-0">
         <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center gap-3">
             <button
               onClick={onBack}
-              className="p-2 rounded-xl hover:bg-white/5 transition-all duration-200 hover:scale-105"
+              className="p-2 rounded-xl hover:bg-[var(--btn-secondary-bg)] transition-all duration-200 hover:scale-105"
               title="Back to Dashboard"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
             <div className="flex-1 min-w-0">
-              <h1 className="text-sm font-semibold gradient-text truncate">Claude Agent Session</h1>
-              <p className="text-xs text-gray-500 font-mono truncate">Session: {sessionId.substring(0, 16)}...</p>
+              <div className="flex items-center gap-2">
+                <h1 className="text-sm font-semibold gradient-text">Claude Agent Session</h1>
+                {sessionStatus === 'checking' && (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--text-secondary)] flex-shrink-0" />
+                )}
+                {sessionStatus === 'active' && (
+                  <span className="flex items-center gap-1.5 text-xs text-green-600 dark:text-green-400 flex-shrink-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 dark:bg-green-400" />
+                    Active
+                  </span>
+                )}
+                {(sessionStatus === 'not_found' || sessionStatus === 'error') && (
+                  <span
+                    className="flex items-center gap-1 text-xs text-red-500 dark:text-red-400 flex-shrink-0 cursor-help"
+                    title={sessionError || 'Session unavailable'}
+                  >
+                    <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+                    Unavailable
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-[var(--text-secondary)] font-mono truncate">Session: {sessionId}</p>
             </div>
 
             {/* Panel Toggles */}
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setShowRightPanel(!showRightPanel)}
-                className="p-2 rounded-xl hover:bg-white/5 transition-all duration-200"
+                className="p-2 rounded-xl hover:bg-[var(--btn-secondary-bg)] transition-all duration-200"
                 title={showRightPanel ? 'Hide activity panel' : 'Show activity panel'}
               >
                 {showRightPanel ? (
-                  <PanelRightClose className="w-4 h-4 text-gray-400" />
+                  <PanelRightClose className="w-4 h-4 text-[var(--text-secondary)]" />
                 ) : (
-                  <PanelRightOpen className="w-4 h-4 text-gray-500" />
+                  <PanelRightOpen className="w-4 h-4 text-[var(--text-secondary)]" />
                 )}
               </button>
               <button
                 onClick={() => setShowResourceMonitor(!showResourceMonitor)}
-                className="p-2 rounded-xl hover:bg-white/5 transition-all duration-200"
+                className="p-2 rounded-xl hover:bg-[var(--btn-secondary-bg)] transition-all duration-200"
                 title={showResourceMonitor ? 'Hide resources' : 'Show resources'}
               >
                 {showResourceMonitor ? (
-                  <Minimize2 className="w-4 h-4 text-emerald-400" />
+                  <Minimize2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
                 ) : (
-                  <Maximize2 className="w-4 h-4 text-gray-500" />
+                  <Maximize2 className="w-4 h-4 text-[var(--text-secondary)]" />
                 )}
               </button>
             </div>
@@ -387,7 +407,7 @@ export function ChatInterface({ sessionId, apiKey, onBack }: ChatInterfaceProps)
             <button
               onClick={handleStopSession}
               disabled={isStopping}
-              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-red-900/80 to-red-950/80 hover:from-red-900 hover:to-red-950 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2 text-xs font-medium shadow-lg shadow-red-950/20"
+              className="px-3 py-1.5 rounded-xl bg-red-600/20 hover:bg-red-600/30 dark:bg-red-900/80 dark:hover:bg-red-900 text-red-600 dark:text-red-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2 text-xs font-medium"
               title="Stop and close this session"
             >
               {isStopping ? (
@@ -400,37 +420,6 @@ export function ChatInterface({ sessionId, apiKey, onBack }: ChatInterfaceProps)
           </div>
         </div>
       </header>
-
-      {/* Session Status Banner */}
-      {sessionStatus === 'checking' && (
-        <div className="bg-gray-900/40 border-b border-gray-700/50 px-4 py-2 flex items-center gap-2 flex-shrink-0">
-          <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
-          <span className="text-sm text-gray-300">Checking session status...</span>
-        </div>
-      )}
-      {sessionStatus === 'active' && (
-        <div className="bg-green-900/20 border-b border-green-700/30 px-4 py-2 flex items-center gap-2 flex-shrink-0">
-          <CheckCircle className="w-4 h-4 text-green-400" />
-          <span className="text-sm text-green-300">Session active</span>
-        </div>
-      )}
-      {(sessionStatus === 'not_found' || sessionStatus === 'error') && (
-        <div className="bg-red-900/20 border-b border-red-700/30 px-4 py-3 flex-shrink-0">
-          <div className="flex items-start gap-2">
-            <AlertCircle className="w-4 h-4 text-red-400 mt-0.5" />
-            <div className="flex-1">
-              <p className="text-sm text-red-300 font-medium mb-1">Session Unavailable</p>
-              <p className="text-xs text-red-300/80">{sessionError}</p>
-            </div>
-            <button
-              onClick={onBack}
-              className="px-3 py-1 rounded-lg bg-red-600/20 hover:bg-red-600/30 text-xs text-red-300 transition-colors"
-            >
-              Go to Dashboard
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Main Content Area - 3 Column Layout */}
       <div className="flex-1 flex overflow-hidden min-h-0">
@@ -447,9 +436,7 @@ export function ChatInterface({ sessionId, apiKey, onBack }: ChatInterfaceProps)
               messages={(() => {
                 // Merge user messages from manualMessages with assistant segments from messageSegments
                 if (messageSegments.length > 0) {
-                  // Get all user messages
                   const userMessages = manualMessages.filter(m => m.role === 'user');
-                  // Combine user messages with assistant message segments
                   return [...userMessages, ...messageSegments].sort((a, b) => {
                     const aTime = a.createdAt?.getTime() || a.timestamp || 0;
                     const bTime = b.createdAt?.getTime() || b.timestamp || 0;
@@ -468,9 +455,9 @@ export function ChatInterface({ sessionId, apiKey, onBack }: ChatInterfaceProps)
 
         {/* Right Panel - Tools, Files, Activity */}
         {showRightPanel && (
-          <div className="w-96 flex flex-col overflow-hidden border-l border-gray-800/50 flex-shrink-0">
+          <div className="w-96 flex flex-col overflow-hidden border-l border-[var(--border-glass)] flex-shrink-0">
             {/* File Explorer */}
-            <div className="h-64 border-b border-gray-800/50 flex-shrink-0">
+            <div className="h-64 border-b border-[var(--border-glass)] flex-shrink-0">
               <FileExplorer
                 sessionId={sessionId}
                 onFileSelect={(filePath) => setSelectedFile(filePath)}
@@ -479,19 +466,19 @@ export function ChatInterface({ sessionId, apiKey, onBack }: ChatInterfaceProps)
             </div>
 
             {/* Tasks Panel - Collapsible */}
-            <div className="border-b border-gray-800/50 flex-shrink-0">
+            <div className="border-b border-[var(--border-glass)] flex-shrink-0">
               <button
                 onClick={() => setShowTasksPanel(!showTasksPanel)}
-                className="w-full p-3 flex items-center justify-between hover:bg-white/5 transition-colors"
+                className="w-full p-3 flex items-center justify-between hover:bg-[var(--btn-secondary-bg)] transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold">Tasks</span>
-                  <span className="text-xs text-gray-400">{todos.length} {todos.length === 1 ? 'task' : 'tasks'}</span>
+                  <span className="text-xs text-[var(--text-secondary)]">{todos.length} {todos.length === 1 ? 'task' : 'tasks'}</span>
                 </div>
                 {showTasksPanel ? (
-                  <ChevronDown className="w-4 h-4 text-gray-400" />
+                  <ChevronDown className="w-4 h-4 text-[var(--text-secondary)]" />
                 ) : (
-                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                  <ChevronRight className="w-4 h-4 text-[var(--text-secondary)]" />
                 )}
               </button>
               {showTasksPanel && (
@@ -501,20 +488,20 @@ export function ChatInterface({ sessionId, apiKey, onBack }: ChatInterfaceProps)
               )}
             </div>
 
-            {/* Tool Execution Panel - Collapsible, Collapsed by Default */}
+            {/* Tool Execution Panel - Collapsible */}
             <div className="flex-shrink-0">
               <button
                 onClick={() => setShowToolsPanel(!showToolsPanel)}
-                className="w-full p-3 flex items-center justify-between hover:bg-white/5 transition-colors"
+                className="w-full p-3 flex items-center justify-between hover:bg-[var(--btn-secondary-bg)] transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold">Tool Execution</span>
-                  <span className="text-xs text-gray-400">{toolEvents.length} {toolEvents.length === 1 ? 'event' : 'events'}</span>
+                  <span className="text-xs text-[var(--text-secondary)]">{toolEvents.length} {toolEvents.length === 1 ? 'event' : 'events'}</span>
                 </div>
                 {showToolsPanel ? (
-                  <ChevronDown className="w-4 h-4 text-gray-400" />
+                  <ChevronDown className="w-4 h-4 text-[var(--text-secondary)]" />
                 ) : (
-                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                  <ChevronRight className="w-4 h-4 text-[var(--text-secondary)]" />
                 )}
               </button>
               {showToolsPanel && (
@@ -526,7 +513,7 @@ export function ChatInterface({ sessionId, apiKey, onBack }: ChatInterfaceProps)
 
             {/* Bottom: Resource Monitor */}
             {showResourceMonitor && (
-              <div className="border-t border-gray-800 p-4 flex-shrink-0">
+              <div className="border-t border-[var(--border-glass)] p-4 flex-shrink-0">
                 <ResourceMonitor sessionId={sessionId} />
               </div>
             )}
@@ -535,7 +522,7 @@ export function ChatInterface({ sessionId, apiKey, onBack }: ChatInterfaceProps)
       </div>
 
       {/* Input Form */}
-      <div className="border-t border-gray-800/50 backdrop-blur-xl bg-black/40 flex-shrink-0">
+      <div className="border-t border-[var(--border-glass)] backdrop-blur-xl bg-[var(--bg-glass)] flex-shrink-0">
         <div className="max-w-4xl mx-auto px-4 py-3">
           <form
             onSubmit={(e) => {
@@ -548,14 +535,14 @@ export function ChatInterface({ sessionId, apiKey, onBack }: ChatInterfaceProps)
               onChange={(e) => setManualInput(e.target.value)}
               placeholder={sessionStatus === 'active' ? "Type your message or /command..." : "Session unavailable"}
               disabled={manualLoading || sessionStatus !== 'active'}
-              className="flex-1 px-4 py-2.5 rounded-2xl bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gray-500/50 focus:border-gray-500/50 disabled:opacity-50 transition-all text-sm placeholder:text-gray-500"
+              className="flex-1 px-4 py-2.5 rounded-2xl bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-slate-400/50 disabled:opacity-50 transition-all text-sm"
               autoFocus
             />
             <button
               type="button"
               onClick={() => setShowUploadModal(true)}
               disabled={sessionStatus !== 'active'}
-              className="px-3 py-2.5 rounded-2xl bg-gray-800/50 hover:bg-gray-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center"
+              className="px-3 py-2.5 rounded-2xl bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center"
               title="Upload files to workspace"
             >
               <Paperclip className="w-4 h-4" />
@@ -565,7 +552,7 @@ export function ChatInterface({ sessionId, apiKey, onBack }: ChatInterfaceProps)
                 type="button"
                 onClick={handleInterrupt}
                 disabled={isInterrupting}
-                className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-red-900/80 to-red-950/80 hover:from-red-900 hover:to-red-950 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2 text-xs font-medium shadow-lg shadow-red-950/20"
+                className="px-4 py-2.5 rounded-2xl bg-red-600/20 hover:bg-red-600/30 dark:bg-red-900/80 dark:hover:bg-red-900 text-red-600 dark:text-red-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2 text-xs font-medium"
                 title="Interrupt current execution"
               >
                 {isInterrupting ? (
@@ -579,7 +566,7 @@ export function ChatInterface({ sessionId, apiKey, onBack }: ChatInterfaceProps)
             <button
               type="submit"
               disabled={manualLoading || !manualInput.trim() || sessionStatus !== 'active'}
-              className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2 text-xs font-medium shadow-lg shadow-gray-900/20"
+              className="px-5 py-2.5 rounded-2xl bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-primary)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2 text-xs font-medium"
             >
               {manualLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -598,7 +585,6 @@ export function ChatInterface({ sessionId, apiKey, onBack }: ChatInterfaceProps)
           sessionId={sessionId}
           onClose={() => setShowUploadModal(false)}
           onUploadComplete={() => {
-            // File explorer auto-refreshes every 3s, so just close modal
             setShowUploadModal(false);
           }}
         />

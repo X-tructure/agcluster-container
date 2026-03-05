@@ -65,21 +65,21 @@ export default function BuilderPage() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-black text-white">
+    <div className="h-screen flex flex-col bg-[var(--bg-base)] text-[var(--text-primary)]">
       {/* Header */}
       <Navigation />
 
       {/* Page Title */}
-      <div className="border-b border-gray-800/50 bg-gradient-to-b from-black via-gray-950/5 to-black">
+      <div className="border-b border-[var(--border-glass)] bg-[var(--bg-glass)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="text-center mb-4">
             <h1 className="text-2xl md:text-3xl font-bold gradient-text mb-1">Agent Builder</h1>
-            <p className="text-gray-400 text-sm">Design custom agent configurations with visual tools</p>
+            <p className="text-[var(--text-secondary)] text-sm">Design custom agent configurations with visual tools</p>
           </div>
           <div className="flex justify-center">
             <button
               onClick={() => setShowLoad(true)}
-              className="px-4 py-2 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900 rounded-lg transition-all"
+              className="px-4 py-2 bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-primary)] rounded-lg transition-all"
             >
               Load Config
             </button>
@@ -97,14 +97,14 @@ export default function BuilderPage() {
             <button
               onClick={() => setShowTest(true)}
               disabled={!config.id || !config.name}
-              className="px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900 disabled:opacity-50 disabled:cursor-not-allowed rounded transition-all"
+              className="px-6 py-3 bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-primary)] disabled:opacity-50 disabled:cursor-not-allowed rounded transition-all"
             >
               Test Agent
             </button>
             <button
               onClick={saveConfig}
               disabled={!config.id || !config.name || saving}
-              className="px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900 disabled:opacity-50 disabled:cursor-not-allowed rounded transition-all"
+              className="px-6 py-3 bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-primary)] disabled:opacity-50 disabled:cursor-not-allowed rounded transition-all"
             >
               {saving ? 'Saving...' : 'Save Configuration'}
             </button>
@@ -112,7 +112,7 @@ export default function BuilderPage() {
         </div>
 
         {/* YAML Preview Side */}
-        <div className="w-1/2 border-l border-gray-800 p-6 overflow-y-auto">
+        <div className="w-1/2 border-l border-[var(--border-glass)] p-6 overflow-y-auto">
           <YAMLPreview config={config} />
         </div>
       </div>

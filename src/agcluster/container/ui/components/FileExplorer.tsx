@@ -145,8 +145,8 @@ export function FileExplorer({ sessionId, onFileSelect, selectedFile }: FileExpl
     return (
       <div key={node.path}>
         <div
-          className={`flex items-center gap-1 px-2 py-1 hover:bg-gray-800 cursor-pointer rounded text-sm ${
-            isSelected ? 'bg-gray-900/50' : ''
+          className={`flex items-center gap-1 px-2 py-1 hover:bg-[var(--btn-secondary-bg)] cursor-pointer rounded text-sm transition-colors ${
+            isSelected ? 'bg-[var(--btn-secondary-hover)]' : ''
           }`}
           style={{ paddingLeft: `${level * 12 + 8}px` }}
           onClick={() => {
@@ -161,16 +161,16 @@ export function FileExplorer({ sessionId, onFileSelect, selectedFile }: FileExpl
         >
           {isDirectory && (
             isExpanded ? (
-              <ChevronDown className="w-4 h-4 text-gray-400 flex-shrink-0" />
+              <ChevronDown className="w-4 h-4 text-[var(--text-secondary)] flex-shrink-0" />
             ) : (
-              <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
+              <ChevronRight className="w-4 h-4 text-[var(--text-secondary)] flex-shrink-0" />
             )
           )}
           {!isDirectory && <div className="w-4" />}
           {isDirectory ? (
-            <Folder className="w-4 h-4 text-gray-400 flex-shrink-0" />
+            <Folder className="w-4 h-4 text-[var(--text-secondary)] flex-shrink-0" />
           ) : (
-            <File className="w-4 h-4 text-gray-400 flex-shrink-0" />
+            <File className="w-4 h-4 text-[var(--text-secondary)] flex-shrink-0" />
           )}
           <span className="flex-1 truncate" title={node.name}>{node.name}</span>
         </div>
@@ -186,12 +186,12 @@ export function FileExplorer({ sessionId, onFileSelect, selectedFile }: FileExpl
 
   if (loading) {
     return (
-      <div className="flex flex-col h-full glass border-l border-gray-800">
-        <div className="p-3 border-b border-gray-800">
+      <div className="flex flex-col h-full glass border-l border-[var(--border-glass)]">
+        <div className="p-3 border-b border-[var(--border-glass)]">
           <h3 className="text-sm font-semibold">Workspace Files</h3>
         </div>
         <div className="flex-1 flex items-center justify-center">
-          <div className="text-sm text-gray-500">Loading files...</div>
+          <div className="text-sm text-[var(--text-secondary)]">Loading files...</div>
         </div>
       </div>
     );
@@ -199,15 +199,15 @@ export function FileExplorer({ sessionId, onFileSelect, selectedFile }: FileExpl
 
   if (error && !sessionUnavailable) {
     return (
-      <div className="flex flex-col h-full glass border-l border-gray-800">
-        <div className="p-3 border-b border-gray-800">
+      <div className="flex flex-col h-full glass border-l border-[var(--border-glass)]">
+        <div className="p-3 border-b border-[var(--border-glass)]">
           <h3 className="text-sm font-semibold">Workspace Files</h3>
         </div>
         <div className="flex-1 flex flex-col items-center justify-center p-4">
-          <div className="text-sm text-red-400 mb-4">{error}</div>
+          <div className="text-sm text-red-500 dark:text-red-400 mb-4">{error}</div>
           <button
             onClick={loadFiles}
-            className="flex items-center gap-2 px-3 py-1.5 text-sm bg-gray-800 hover:bg-gray-700 rounded"
+            className="flex items-center gap-2 px-3 py-1.5 text-sm bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] rounded"
           >
             <RefreshCw className="w-4 h-4" />
             Retry
@@ -219,16 +219,16 @@ export function FileExplorer({ sessionId, onFileSelect, selectedFile }: FileExpl
 
   if (sessionUnavailable) {
     return (
-      <div className="flex flex-col h-full glass border-l border-gray-800">
-        <div className="p-3 border-b border-gray-800">
+      <div className="flex flex-col h-full glass border-l border-[var(--border-glass)]">
+        <div className="p-3 border-b border-[var(--border-glass)]">
           <h3 className="text-sm font-semibold">Workspace Files</h3>
         </div>
         <div className="flex-1 flex flex-col items-center justify-center p-4 text-center">
-          <div className="text-sm text-gray-500 mb-3">Session not active</div>
-          <div className="text-xs text-gray-600">Files will appear once the session is ready</div>
+          <div className="text-sm text-[var(--text-secondary)] mb-3">Session not active</div>
+          <div className="text-xs text-[var(--text-secondary)]">Files will appear once the session is ready</div>
           <button
             onClick={() => { setSessionUnavailable(false); setLoading(true); loadFiles(); }}
-            className="mt-3 flex items-center gap-2 px-3 py-1.5 text-sm bg-gray-800 hover:bg-gray-700 rounded"
+            className="mt-3 flex items-center gap-2 px-3 py-1.5 text-sm bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] rounded"
           >
             <RefreshCw className="w-4 h-4" />
             Retry
@@ -239,14 +239,14 @@ export function FileExplorer({ sessionId, onFileSelect, selectedFile }: FileExpl
   }
 
   return (
-    <div className="flex flex-col h-full glass border-l border-gray-800" data-testid="file-explorer">
+    <div className="flex flex-col h-full glass border-l border-[var(--border-glass)]" data-testid="file-explorer">
       {/* Header */}
-      <div className="p-3 border-b border-gray-800 flex justify-between items-center">
+      <div className="p-3 border-b border-[var(--border-glass)] flex justify-between items-center">
         <h3 className="text-sm font-semibold">Workspace Files</h3>
         <div className="flex gap-1">
           <button
             onClick={() => setShowUploadModal(true)}
-            className="p-1 hover:bg-gray-800 rounded"
+            className="p-1 hover:bg-[var(--btn-secondary-bg)] rounded"
             title="Upload files"
             data-testid="upload-files"
           >
@@ -254,14 +254,14 @@ export function FileExplorer({ sessionId, onFileSelect, selectedFile }: FileExpl
           </button>
           <button
             onClick={loadFiles}
-            className="p-1 hover:bg-gray-800 rounded"
+            className="p-1 hover:bg-[var(--btn-secondary-bg)] rounded"
             title="Refresh files"
           >
             <RefreshCw className="w-4 h-4" />
           </button>
           <button
             onClick={downloadWorkspace}
-            className="p-1 hover:bg-gray-800 rounded"
+            className="p-1 hover:bg-[var(--btn-secondary-bg)] rounded"
             title="Download workspace as ZIP"
             data-testid="download-workspace"
           >
@@ -278,12 +278,12 @@ export function FileExplorer({ sessionId, onFileSelect, selectedFile }: FileExpl
               {tree.children.map(child => renderNode(child, 0))}
             </div>
           ) : (
-            <div className="flex items-center justify-center h-full text-sm text-gray-500">
+            <div className="flex items-center justify-center h-full text-sm text-[var(--text-secondary)]">
               No files in workspace
             </div>
           )
         ) : (
-          <div className="flex items-center justify-center h-full text-sm text-gray-500">
+          <div className="flex items-center justify-center h-full text-sm text-[var(--text-secondary)]">
             No files found
           </div>
         )}

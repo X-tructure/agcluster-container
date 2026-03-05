@@ -97,27 +97,27 @@ export function ToolEventCard({ event }: ToolEventCardProps) {
 
   return (
     <div
-      className="flex items-center gap-2 px-3 py-2 text-xs text-gray-400 hover:bg-gray-800/30 rounded-lg transition-colors max-w-3xl"
+      className="flex items-center gap-2 px-3 py-2 text-xs text-[var(--text-secondary)] hover:bg-[var(--btn-secondary-bg)] rounded-lg transition-colors max-w-3xl"
       data-testid="tool-event-card"
     >
       {getStatusIcon()}
       <span className={`font-medium ${getStatusColor()}`}>{event.tool_name}</span>
       {metadata && (
         <>
-          <span className="text-gray-600">·</span>
-          <span className="text-gray-500 truncate">{metadata}</span>
+          <span className="text-[var(--border-glass-hover)]">·</span>
+          <span className="text-[var(--text-secondary)] truncate">{metadata}</span>
         </>
       )}
       {event.duration_ms && event.status === 'completed' && (
         <>
-          <span className="text-gray-600">·</span>
-          <span className="text-gray-500">{event.duration_ms}ms</span>
+          <span className="text-[var(--border-glass-hover)]">·</span>
+          <span className="text-[var(--text-secondary)]">{event.duration_ms}ms</span>
         </>
       )}
       {event.error && (
         <>
-          <span className="text-gray-600">·</span>
-          <span className="text-red-400 truncate">{event.error}</span>
+          <span className="text-[var(--border-glass-hover)]">·</span>
+          <span className="text-red-500 dark:text-red-400 truncate">{event.error}</span>
         </>
       )}
     </div>

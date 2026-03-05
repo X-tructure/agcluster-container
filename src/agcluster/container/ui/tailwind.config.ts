@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -47,62 +48,66 @@ const config: Config = {
         DEFAULT: {
           css: {
             maxWidth: 'none',
-            color: '#d1d5db',
+            color: '#374151',
             a: {
-              color: '#ffffff',
+              color: '#0f172a',
               '&:hover': {
-                color: '#e5e5e5',
+                color: '#374151',
               },
             },
-            h1: {
-              color: '#ffffff',
-            },
-            h2: {
-              color: '#ffffff',
-            },
-            h3: {
-              color: '#ffffff',
-            },
-            h4: {
-              color: '#ffffff',
-            },
+            h1: { color: '#0f172a' },
+            h2: { color: '#0f172a' },
+            h3: { color: '#0f172a' },
+            h4: { color: '#0f172a' },
             code: {
-              color: '#ffffff',
-              backgroundColor: '#1f2937',
+              color: '#0f172a',
+              backgroundColor: '#f1f5f9',
               padding: '0.2em 0.4em',
               borderRadius: '0.25rem',
               fontWeight: '400',
             },
-            'code::before': {
-              content: '""',
+            'code::before': { content: '""' },
+            'code::after': { content: '""' },
+            pre: {
+              backgroundColor: '#f8fafc',
+              color: '#1e293b',
             },
-            'code::after': {
-              content: '""',
+            strong: { color: '#0f172a' },
+            blockquote: {
+              color: '#64748b',
+              borderLeftColor: '#cbd5e1',
+            },
+            hr: { borderColor: '#e2e8f0' },
+            ol: { paddingLeft: '1.5em' },
+            ul: { paddingLeft: '1.5em' },
+            li: { marginTop: '0.5em', marginBottom: '0.5em' },
+          },
+        },
+        invert: {
+          css: {
+            color: '#d1d5db',
+            a: {
+              color: '#ffffff',
+              '&:hover': { color: '#e5e5e5' },
+            },
+            h1: { color: '#ffffff' },
+            h2: { color: '#ffffff' },
+            h3: { color: '#ffffff' },
+            h4: { color: '#ffffff' },
+            code: {
+              color: '#ffffff',
+              backgroundColor: '#1f2937',
             },
             pre: {
               backgroundColor: '#0d1117',
               color: '#e6edf3',
             },
-            strong: {
-              color: '#ffffff',
-            },
+            strong: { color: '#ffffff' },
             blockquote: {
               color: '#9ca3af',
               borderLeftColor: '#4b5563',
             },
-            hr: {
-              borderColor: '#374151',
-            },
-            ol: {
-              paddingLeft: '1.5em',
-            },
-            ul: {
-              paddingLeft: '1.5em',
-            },
-            li: {
-              marginTop: '0.5em',
-              marginBottom: '0.5em',
-            },
+            hr: { borderColor: '#374151' },
           },
         },
       },

@@ -27,18 +27,16 @@ export function MessageCard({ message }: MessageCardProps) {
       <div
         className={`flex items-start gap-3 max-w-3xl p-3.5 rounded-2xl ${
           isUser
-            ? 'bg-gradient-to-br from-gray-700 to-gray-800 text-white shadow-lg shadow-gray-900/30'
-            : 'glass border border-gray-700/50 backdrop-blur-xl'
+            ? 'bg-[var(--btn-secondary-hover)] text-[var(--text-primary)]'
+            : 'glass border border-[var(--border-glass)]'
         }`}
       >
         <div className="flex-shrink-0">
-          <div className={`w-7 h-7 rounded-xl flex items-center justify-center ${
-            isUser ? 'bg-gray-800/60' : 'bg-gradient-to-br from-gray-800/40 to-gray-700/40'
-          }`}>
+          <div className={`w-7 h-7 rounded-xl flex items-center justify-center bg-[var(--btn-secondary-bg)]`}>
             {isUser ? (
               <User className="w-4 h-4" />
             ) : (
-              <Bot className="w-4 h-4 text-gray-400" />
+              <Bot className="w-4 h-4 text-[var(--text-secondary)]" />
             )}
           </div>
         </div>
@@ -47,7 +45,7 @@ export function MessageCard({ message }: MessageCardProps) {
           {isUser ? (
             <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</p>
           ) : (
-            <div className="prose prose-invert prose-sm max-w-none">
+            <div className="prose dark:prose-invert prose-sm max-w-none">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeHighlight]}
@@ -56,7 +54,7 @@ export function MessageCard({ message }: MessageCardProps) {
                     const { className, children } = props;
                     const isInline = !className || !className.startsWith('language-');
                     return isInline ? (
-                      <code className="px-2 py-0.5 rounded-md bg-gray-800/80 text-gray-300 text-xs font-mono border border-gray-700/50">
+                      <code className="px-2 py-0.5 rounded-md bg-[var(--btn-secondary-bg)] text-[var(--text-primary)] text-xs font-mono border border-[var(--border-glass)]">
                         {children}
                       </code>
                     ) : (
@@ -66,7 +64,7 @@ export function MessageCard({ message }: MessageCardProps) {
                     );
                   },
                   pre: (props) => (
-                    <pre className="overflow-x-auto rounded-xl bg-gray-950/80 border border-gray-800/50 p-4 my-3 shadow-inner">
+                    <pre className="overflow-x-auto rounded-xl bg-[var(--hljs-bg)] border border-[var(--border-glass)] p-4 my-3">
                       {props.children}
                     </pre>
                   ),

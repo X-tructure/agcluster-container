@@ -33,7 +33,7 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
   // Show loading screen while initializing
   if (isInitializing) {
     return (
-      <div className="h-screen flex items-center justify-center bg-gradient-to-br from-gray-950 via-black to-gray-950">
+      <div className="h-screen flex items-center justify-center bg-[var(--bg-base)]">
         <div className="text-center">
           <Loader2 className="w-12 h-12 animate-spin text-blue-500 mx-auto mb-4" />
           <p className="text-gray-400">Loading session...</p>
