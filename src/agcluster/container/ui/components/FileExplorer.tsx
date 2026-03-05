@@ -22,6 +22,7 @@ export function FileExplorer({ sessionId, onFileSelect, selectedFile }: FileExpl
   const [expanded, setExpanded] = useState<Set<string>>(new Set(['/']));
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sessionUnavailable, setSessionUnavailable] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState<string>('');
 
@@ -48,9 +49,20 @@ export function FileExplorer({ sessionId, onFileSelect, selectedFile }: FileExpl
       clearTimeout(timeoutId);
 
       if (!res.ok) {
-        throw new Error(`Failed to load files: ${res.statusText}`);
+        if (res.status === 404) {
+          // Session not found — stop polling, show waiting state
+          const body = await res.text().catch(() => '');
+          const detail = body ? (() => { try { return JSON.parse(body).detail; } catch { return body; } })() : 'Session not active';
+          setSessionUnavailable(true);
+          setError(detail || 'Session not active');
+          setLoading(false);
+          return;
+        }
+        const body = await res.text().catch(() => res.statusText);
+        throw new Error(`Failed to load files: ${body || res.statusText}`);
       }
 
+      setSessionUnavailable(false);
       const data = await res.json();
       setTree(data.tree);
       setError(null);
@@ -70,10 +82,14 @@ export function FileExplorer({ sessionId, onFileSelect, selectedFile }: FileExpl
   useEffect(() => {
     loadFiles();
 
-    // Poll for file changes every 3 seconds
-    const interval = setInterval(loadFiles, 3000);
+    // Poll for file changes every 3 seconds, but stop if session is unavailable
+    const interval = setInterval(() => {
+      if (!sessionUnavailable) {
+        loadFiles();
+      }
+    }, 3000);
     return () => clearInterval(interval);
-  }, [loadFiles]);
+  }, [loadFiles, sessionUnavailable]);
 
   const toggleExpanded = (path: string) => {
     const newExpanded = new Set(expanded);
@@ -181,7 +197,7 @@ export function FileExplorer({ sessionId, onFileSelect, selectedFile }: FileExpl
     );
   }
 
-  if (error) {
+  if (error && !sessionUnavailable) {
     return (
       <div className="flex flex-col h-full glass border-l border-gray-800">
         <div className="p-3 border-b border-gray-800">
@@ -192,6 +208,27 @@ export function FileExplorer({ sessionId, onFileSelect, selectedFile }: FileExpl
           <button
             onClick={loadFiles}
             className="flex items-center gap-2 px-3 py-1.5 text-sm bg-gray-800 hover:bg-gray-700 rounded"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (sessionUnavailable) {
+    return (
+      <div className="flex flex-col h-full glass border-l border-gray-800">
+        <div className="p-3 border-b border-gray-800">
+          <h3 className="text-sm font-semibold">Workspace Files</h3>
+        </div>
+        <div className="flex-1 flex flex-col items-center justify-center p-4 text-center">
+          <div className="text-sm text-gray-500 mb-3">Session not active</div>
+          <div className="text-xs text-gray-600">Files will appear once the session is ready</div>
+          <button
+            onClick={() => { setSessionUnavailable(false); setLoading(true); loadFiles(); }}
+            className="mt-3 flex items-center gap-2 px-3 py-1.5 text-sm bg-gray-800 hover:bg-gray-700 rounded"
           >
             <RefreshCw className="w-4 h-4" />
             Retry

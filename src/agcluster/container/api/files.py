@@ -21,6 +21,26 @@ from agcluster.container.core.container_manager import container_manager
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
+
+def _find_docker_container_by_session(session_id: str):
+    """
+    Fallback: look up a running Docker container by its agcluster.session_id label.
+
+    Used when the in-memory session manager has lost state (e.g. after API restart)
+    but the Docker container is still running.
+
+    Returns the docker container object or None.
+    """
+    try:
+        docker_client = container_manager.provider.docker_client
+        containers = docker_client.containers.list(
+            filters={"label": f"agcluster.session_id={session_id}", "status": "running"}
+        )
+        return containers[0] if containers else None
+    except Exception:
+        return None
+
+
 # Zip bomb protection limits
 MAX_WORKSPACE_SIZE = 1 * 1024 * 1024 * 1024  # 1GB
 MAX_FILES = 10000
@@ -217,11 +237,20 @@ async def verify_session_access(
 
     api_key = parts[1]
 
-    # Get session
+    # Get session from in-memory manager
     try:
         agent_container = await session_manager.get_session(session_id)
     except SessionNotFoundError:
-        raise HTTPException(status_code=404, detail=f"Session {session_id} not found")
+        # Session not in memory (e.g. API restarted) — try Docker label lookup
+        docker_container = _find_docker_container_by_session(session_id)
+        if docker_container is None:
+            raise HTTPException(status_code=404, detail=f"Session {session_id} not found")
+        # Container is running but session state was lost; allow access with a warning
+        logger.warning(
+            f"Session {session_id} not in memory but container {docker_container.id[:12]} "
+            "is still running. Allowing file access (ownership unverifiable after restart)."
+        )
+        return api_key
 
     # Check if this API key owns this session
     # Get api_key_hash from container metadata
@@ -296,14 +325,16 @@ async def list_workspace_files(session_id: str, api_key: str = Depends(verify_se
     """
     try:
         container = await session_manager.get_session(session_id)
-    except SessionNotFoundError:
-        raise HTTPException(status_code=404, detail=f"Session {session_id} not found")
-
-    try:
-        # Get Docker container
         docker_container = container_manager.provider.docker_client.containers.get(
             container.container_id
         )
+    except SessionNotFoundError:
+        # Session lost after restart — find container by label
+        docker_container = _find_docker_container_by_session(session_id)
+        if docker_container is None:
+            raise HTTPException(status_code=404, detail=f"Session {session_id} not found")
+
+    try:
 
         # Execute find command to list all files and directories
         exec_result = docker_container.exec_run(
