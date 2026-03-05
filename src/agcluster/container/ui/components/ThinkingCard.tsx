@@ -32,7 +32,7 @@ export function ThinkingCard({ event }: ThinkingCardProps) {
 
   return (
     <div
-      className="flex items-start gap-2.5 px-3 py-2.5 rounded-xl bg-gradient-to-r from-gray-900/40 to-gray-800/40 border border-gray-700/50 backdrop-blur-sm"
+      className="flex items-start gap-2.5 px-3 py-2.5 rounded-xl bg-gradient-to-r from-gray-900/40 to-gray-800/40 border border-gray-700/50 backdrop-blur-sm max-w-3xl"
       data-testid="thinking-card"
     >
       <div className="flex-shrink-0">

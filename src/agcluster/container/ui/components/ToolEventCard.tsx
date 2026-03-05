@@ -97,7 +97,7 @@ export function ToolEventCard({ event }: ToolEventCardProps) {
 
   return (
     <div
-      className="flex items-center gap-2 px-3 py-2 text-xs text-gray-400 hover:bg-gray-800/30 rounded-lg transition-colors"
+      className="flex items-center gap-2 px-3 py-2 text-xs text-gray-400 hover:bg-gray-800/30 rounded-lg transition-colors max-w-3xl"
       data-testid="tool-event-card"
     >
       {getStatusIcon()}
